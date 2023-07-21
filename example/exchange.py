@@ -6,9 +6,9 @@ import sys
 from example.future import future_examples
 from example.spot import spot_examples
 from example.wallet import wallet_examples
-from src.constant.symbol import Symbol
-from src.constant.time_frame import TimeFrame
-from src.interface.exchange import Exchange
+from pyccx.constant.symbol import Symbol
+from pyccx.constant.time_frame import TimeFrame
+from pyccx.interface.exchange import Exchange
 
 
 def exchange_examples(exchange: Exchange, symbol: Symbol, time_frame: TimeFrame):

@@ -1,10 +1,10 @@
 import time
 
-from src.constant.order_side import OrderSide
-from src.constant.order_type import OrderType
-from src.constant.symbol import Symbol
-from src.constant.time_frame import TimeFrame
-from src.interface.exchange import Exchange
+from pyccx.constant.order_side import OrderSide
+from pyccx.constant.order_type import OrderType
+from pyccx.constant.symbol import Symbol
+from pyccx.constant.time_frame import TimeFrame
+from pyccx.interface.exchange import Exchange
 
 
 def future_market_examples(exchange: Exchange, symbol: Symbol, time_frame: TimeFrame):
