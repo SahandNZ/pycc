@@ -1,0 +1,10 @@
+**/data/
+
+# Python environments
+**/venv/
+
+# Pycharm
+**/.idea/
+**/__pycache__/
+
+**/dist
