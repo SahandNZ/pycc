@@ -1,0 +1,18 @@
+{
+    "mexc": {
+        "exchange": "mexc",
+        "key": "mx0vglU2Z7zfaKB9ko",
+        "secret_key": "e4bda7af7b9f4b46af4ceeb0c151872f"
+    },
+    "binance": {
+        "exchange": "binance",
+        "key": "",
+        "secret_key": ""
+    },
+    "bitget": {
+        "exchange": "bitget",
+        "passphrase": "PythonTest0022",
+        "key": "bg_4fb59f06ce61289683e2bc6c0a47442c",
+        "secret_key": "4781f01d8e211c4ed25fd9f6ca5f787fcdf6e83837290133f55b4f138ccac10f"
+    }
+}

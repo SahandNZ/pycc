@@ -1,0 +1,2 @@
+class TimeFrame:
+    pass
