@@ -14,6 +14,7 @@ class BitgetFutureMarket(Market):
     def __init__(self, https: HttpsClient, ws: WsClient):
         super().__init__(https, ws)
 
+    @property
     def max_candles(self) -> int:
         pass
 
