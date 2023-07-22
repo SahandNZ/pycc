@@ -2,10 +2,9 @@ import hashlib
 import hmac
 import json
 from datetime import datetime
+from requests import Response
 from typing import Dict, Tuple
 from urllib import parse
-
-from requests import Response
 
 from pyccx.exchanges.binance.future.exception import BinanceFutureHttpsException
 from pyccx.interface.https import HttpsClient
@@ -15,16 +14,16 @@ class BinanceFutureHttpsClient(HttpsClient):
     def __init__(self, key: str, secret_key: str):
         super().__init__(base_url='https://fapi.binance.com', key=key, secret_key=secret_key)
 
-    def sign(self, method: str, params: Dict, request_time: int) -> str:
+    def sign(self, method: str, endpoint: str, params: Dict, request_time: int) -> str:
         to_sign = parse.urlencode(params)
         return hmac.new(self._secret_key.encode(), msg=to_sign.encode(), digestmod=hashlib.sha256).hexdigest()
 
-    def prepare(self, method: str, params: Dict, sign: bool) -> Tuple[Dict, Dict, Dict]:
+    def prepare(self, method: str, endpoint: str, params: Dict, sign: bool) -> Tuple[Dict, Dict, Dict]:
         request_time = int(datetime.now().timestamp() * 1000)
         headers = {"X-MBX-APIKEY": self._key}
         params = params if params is not None else {}
         params["timestamp"] = request_time
-        params["signature"] = self.sign(method=method, params=params, request_time=request_time)
+        params["signature"] = self.sign(method=method, endpoint=endpoint, params=params, request_time=request_time)
 
         return headers, params, {}
 
