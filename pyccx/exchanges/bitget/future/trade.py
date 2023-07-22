@@ -70,8 +70,9 @@ class BitgetFutureTrade(Trade):
     def post_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
                    price: float = None) -> str:
         endpoint = "/api/mix/v1/order/placeOrder"
-        params = {"symbol": symbol, "marginCoin": "USDT", "size": str(volume), "price": str(price), "side": side,
-                  "orderType": order_type}
+        params = {"symbol": symbol, "marginCoin": "USDT", "size": str(volume), "side": side, "orderType": order_type}
+        if price is not None:
+            params["price"] = str(price)
         response = self._https.post(endpoint=endpoint, params=params, sign=True)
         order_id = response['orderId']
         self.__oid2symbol[order_id] = symbol
