@@ -24,26 +24,18 @@ class BinanceFutureTrade(Trade):
         balance = Balance.from_binance([item for item in response if 'USDT' == item['asset']][0])
         return balance
 
-    @encode_symbol
-    @encode_position_side
     def get_leverage(self, symbol: Symbol, side: PositionSide) -> int:
         pass
 
-    @encode_symbol
-    @encode_position_side
     def post_leverage(self, symbol: Symbol, side: PositionSide, leverage: int) -> bool:
         pass
 
-    @decode_symbol
     def get_order(self, order_id: str) -> Order:
         pass
 
     def get_open_orders(self) -> List[Order]:
         pass
 
-    @encode_symbol
-    @encode_order_side
-    @encode_order_type
     def post_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
                    price: float = None) -> str:
         pass
@@ -51,7 +43,6 @@ class BinanceFutureTrade(Trade):
     def delete_order(self, order_id: str) -> bool:
         pass
 
-    @encode_symbol
     def get_open_position(self, symbol: Symbol) -> Position:
         pass
 
