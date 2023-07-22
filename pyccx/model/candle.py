@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Dict, List
 
+import pandas as pd
+
 
 class Candle:
     def __init__(self):
@@ -43,10 +45,21 @@ class Candle:
     @staticmethod
     def to_csv(candles: List, path: str, mode: str):
         with open(path, mode) as file:
-            file.write(Candle.csv_header())
+            if 'w' in mode:
+                file.write(Candle.csv_header())
             for candle in candles:
-                line = ','.join(candle.to_list()) + '\n'
+                line = ','.join(str(item) for item in candle.to_list()) + '\n'
                 file.write(line)
+
+    @staticmethod
+    def to_data_frame(candles: List) -> pd.DataFrame:
+        data = [candle.to_list() for candle in candles]
+        columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume', 'trade']
+        df = pd.DataFrame(data=data, columns=columns)
+        df['datetime'] = [datetime.fromtimestamp(timestamp) for timestamp in df.timestamp]
+        df.set_index('timestamp')
+
+        return df
 
     @staticmethod
     def csv_header():
