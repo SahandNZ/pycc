@@ -68,11 +68,15 @@ class BitgetFutureTrade(Trade):
     @encode_order_side
     @encode_order_type
     def post_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
-                   price: float = None) -> str:
+                   price: float = None, take_profit_price: float = None, stop_loss_price: float = None) -> str:
         endpoint = "/api/mix/v1/order/placeOrder"
         params = {"symbol": symbol, "marginCoin": "USDT", "size": str(volume), "side": side, "orderType": order_type}
         if price is not None:
             params["price"] = str(price)
+        if take_profit_price is not None:
+            params["presetTakeProfitPrice"] = str(take_profit_price)
+        if stop_loss_price is not None:
+            params["presetStopLossPrice"] = str(stop_loss_price)
         response = self._https.post(endpoint=endpoint, params=params, sign=True)
         order_id = response['orderId']
         self.__oid2symbol[order_id] = symbol
@@ -86,6 +90,12 @@ class BitgetFutureTrade(Trade):
         order_id = response['orderId']
         del self.__oid2symbol[order_id]
         return order_id
+
+    def delete_all_orders(self) -> bool:
+        endpoint = "/api/mix/v1/order/cancel-all-orders"
+        params = {"productType": "umcbl", "marginCoin": "USDT"}
+        response = self._https.post(endpoint=endpoint, params=params, sign=True)
+        self.__oid2symbol = {}
 
     @encode_symbol
     @decode_symbol

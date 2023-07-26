@@ -37,10 +37,13 @@ class BinanceFutureTrade(Trade):
         pass
 
     def post_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
-                   price: float = None) -> str:
+                   price: float = None, take_profit_price: float = None, stop_loss_price: float = None) -> str:
         pass
 
     def delete_order(self, order_id: str) -> bool:
+        pass
+
+    def delete_all_orders(self) -> bool:
         pass
 
     def get_open_position(self, symbol: Symbol) -> Position:

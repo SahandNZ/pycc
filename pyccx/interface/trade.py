@@ -44,11 +44,15 @@ class Trade(ABC):
 
     @abstractmethod
     def post_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
-                   price: float = None) -> str:
+                   price: float = None, take_profit_price: float = None, stop_loss_price: float = None) -> str:
         raise NotImplementedError()
 
     @abstractmethod
     def delete_order(self, order_id: int) -> bool:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def delete_all_orders(self) -> bool:
         raise NotImplementedError()
 
     @abstractmethod

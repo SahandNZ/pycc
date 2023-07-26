@@ -56,7 +56,7 @@ class MexcFutureTrade(Trade):
     @encode_order_side
     @encode_order_type
     def post_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
-                   price: float = None) -> str:
+                   price: float = None, take_profit_price: float = None, stop_loss_price: float = None) -> str:
         endpoint = "api/v1/private/order/submit"
         params = {"symbol": symbol, "side": side, "type": order_type, "openType": 2, "vol": volume, "price": price}
         response = self._https.post(endpoint=endpoint, params=params, sign=True)
@@ -66,6 +66,9 @@ class MexcFutureTrade(Trade):
         endpoint = "api/v1/private/order/cancel"
         params = [order_id]
         response = self._https.post(endpoint=endpoint, params=params, sign=True)
+
+    def delete_all_orders(self) -> bool:
+        pass
 
     @encode_symbol
     def get_open_position(self, symbol: Symbol) -> Position:
