@@ -6,7 +6,7 @@ from requests import Response
 from typing import Dict, Tuple
 from urllib import parse
 
-from pyccx.exchanges.binance.future.exception import BinanceFutureHttpsException
+from pyccx.exchange.binance.future.exception import BinanceFutureHttpsException
 from pyccx.interface.https import HttpsClient
 
 
@@ -23,7 +23,8 @@ class BinanceFutureHttpsClient(HttpsClient):
         headers = {"X-MBX-APIKEY": self._key}
         params = params if params is not None else {}
         params["timestamp"] = request_time
-        params["signature"] = self.sign(method=method, endpoint=endpoint, params=params, request_time=request_time)
+        if sign:
+            params["signature"] = self.sign(method=method, endpoint=endpoint, params=params, request_time=request_time)
 
         return headers, params, {}
 

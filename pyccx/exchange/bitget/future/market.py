@@ -2,7 +2,7 @@ from typing import List
 
 from pyccx.constant.symbol import Symbol
 from pyccx.constant.time_frame import TimeFrame
-from pyccx.exchanges.bitget.future.decorators import *
+from pyccx.exchange.bitget.future.decorators import *
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.market import Market
 from pyccx.interface.ws import WsClient

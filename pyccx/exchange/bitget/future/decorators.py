@@ -32,7 +32,8 @@ def encode_order_type(func):
 
 def decode_symbol(func):
     def decode(item):
-        item.__dict__['symbol'] = item.__dict__['symbol'].split('_')[0].replace("USDT", "-USDT")
+        if item is not None:
+            item.__dict__['symbol'] = item.__dict__['symbol'].split('_')[0].replace("USDT", "-USDT")
 
     def inner(*args, **kwargs):
         result = func(*args, **kwargs)
@@ -108,7 +109,8 @@ def decode_order_status(func):
 
 def decode_position_type(func):
     def decode(item):
-        item.__dict__['type'] = 1 if 'fixed' == item.__dict__['type'] else 2
+        if item is not None:
+            item.__dict__['type'] = 1 if 'fixed' == item.__dict__['type'] else 2
 
     def inner(*args, **kwargs):
         result = func(*args, **kwargs)
@@ -125,7 +127,8 @@ def decode_position_type(func):
 
 def decode_position_side(func):
     def decode(item):
-        item.__dict__['side'] = 1 if 'long' == item.__dict__['side'] else -1
+        if item is not None:
+            item.__dict__['side'] = 1 if 'long' == item.__dict__['side'] else -1
 
     def inner(*args, **kwargs):
         result = func(*args, **kwargs)

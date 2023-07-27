@@ -5,7 +5,7 @@ from pyccx.constant.order_side import OrderSide
 from pyccx.constant.order_type import OrderType
 from pyccx.constant.position_side import PositionSide
 from pyccx.constant.symbol import Symbol
-from pyccx.exchanges.bitget.future.decorators import *
+from pyccx.exchange.bitget.future.decorators import *
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.trade import Trade
 from pyccx.interface.ws import WsClient

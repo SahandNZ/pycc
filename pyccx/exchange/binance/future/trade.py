@@ -2,7 +2,7 @@ from typing import List
 
 from pyccx.constant.hedge_mode import HedgeMode
 from pyccx.constant.symbol import Symbol
-from pyccx.exchanges.binance.future.decorators import *
+from pyccx.exchange.binance.future.decorators import *
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.trade import Trade
 from pyccx.interface.ws import WsClient

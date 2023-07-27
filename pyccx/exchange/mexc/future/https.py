@@ -9,7 +9,7 @@ from urllib.parse import quote
 
 from requests import Response
 
-from pyccx.exchanges.mexc.future.exception import MexcFutureHttpsException
+from pyccx.exchange.mexc.future.exception import MexcFutureHttpsException
 from pyccx.interface.https import HttpsClient
 
 

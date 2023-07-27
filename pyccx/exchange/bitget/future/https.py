@@ -8,7 +8,7 @@ from urllib import parse
 
 from requests import Response
 
-from pyccx.exchanges.bitget.future.exception import BitgetFutureHttpsException
+from pyccx.exchange.bitget.future.exception import BitgetFutureHttpsException
 from pyccx.interface.https import HttpsClient
 
 

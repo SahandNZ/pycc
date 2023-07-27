@@ -19,15 +19,11 @@ class Position:
     @staticmethod
     def from_bitget(data: Dict):
         if 0 == len(data):
-            instance = Position()
-            instance.volume = 0
-            return instance
+            return None
         elif 1 == len(data):
             data = data[0]
         else:
-            long_volume = float(data[0]['available'])
-            short_volume = float(data[1]['available'])
-            data = data[0] if short_volume <= long_volume else data[1]
+            data = data[0] if float(data[1]['available']) <= float(data[0]['available']) else data[1]
 
         instance = Position()
 
