@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import List
 
-from pyccx.constant.symbol import Symbol
 from pyccx.exchange.binance.future.decorators import *
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.market import Market
@@ -39,7 +38,7 @@ class BinanceFutureMarket(Market):
 
     @symbol_decorator
     @time_frame_decorator
-    def get_candles(self, symbol: Symbol, time_frame: TimeFrame) -> List[Candle]:
+    def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
         endpoint = '/fapi/v1/klines'
         params = {'symbol': symbol, 'interval': time_frame}
         response = self._https.get(endpoint=endpoint, params=params)
@@ -47,7 +46,7 @@ class BinanceFutureMarket(Market):
         return candles
 
     @symbol_decorator
-    def get_historical_candles(self, symbol: Symbol, time_frame: TimeFrame, start_timestamp: int, stop_timestamp) \
+    def get_historical_candles(self, symbol: str, time_frame: TimeFrame, start_timestamp: int, stop_timestamp) \
             -> List[Candle]:
         endpoint = '/fapi/v1/klines'
         limit = (stop_timestamp - start_timestamp) // time_frame

@@ -6,10 +6,9 @@ from datetime import datetime
 from typing import Dict, Tuple
 from urllib import parse
 
-from requests import Response
-
 from pyccx.exchange.bitget.future.exception import BitgetFutureHttpsException
 from pyccx.interface.https import HttpsClient
+from requests import Response
 
 
 class BitgetFutureHttpsClient(HttpsClient):
@@ -28,11 +27,12 @@ class BitgetFutureHttpsClient(HttpsClient):
         request_time = int(datetime.now().timestamp() * 1000)
         headers = {
             'ACCESS-KEY': self._key,
-            'ACCESS-SIGN': self.sign(method, endpoint, params, request_time),
             'ACCESS-TIMESTAMP': str(request_time),
             'ACCESS-PASSPHRASE': self._passphrase,
             'Content-Type': 'application/json',
         }
+        if sign:
+            headers['ACCESS-SIGN'] = self.sign(method, endpoint, params, request_time)
 
         body = json.dumps(params) if "POST" == method else ""
         params = params if "GET" == method and params is not None else {}
@@ -41,9 +41,10 @@ class BitgetFutureHttpsClient(HttpsClient):
 
     def parse(self, response: Response):
         response_map = json.loads(response.text)
-        code = int(response_map['code'])
-        message = response_map['msg']
-        if 0 == code:
-            return response_map['data']
+        if 'code' in response_map:
+            if 0 == int(response_map['code']):
+                return response_map['data'] if 'data' in response_map else response_map
+            else:
+                raise BitgetFutureHttpsException(f"Code: {response_map['code']}, Message: {response_map['msg']}")
         else:
-            raise BitgetFutureHttpsException(f"Code: {code}, Message: {message}")
+            return response_map

@@ -4,8 +4,6 @@ from typing import List
 from pyccx.constant.hedge_mode import HedgeMode
 from pyccx.constant.order_side import OrderSide
 from pyccx.constant.order_type import OrderType
-from pyccx.constant.position_side import PositionSide
-from pyccx.constant.symbol import Symbol
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.ws import WsClient
 from pyccx.model.balance import Balance
@@ -27,11 +25,11 @@ class Trade(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_leverage(self, symbol: Symbol, side: PositionSide) -> int:
+    def get_leverage(self, symbol: str) -> int:
         raise NotImplementedError()
 
     @abstractmethod
-    def post_leverage(self, symbol: Symbol, side: PositionSide, leverage: int) -> int:
+    def post_leverage(self, symbol: str, leverage: int) -> int:
         raise NotImplementedError()
 
     @abstractmethod
@@ -43,8 +41,8 @@ class Trade(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def post_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
-                   price: float = None, take_profit_price: float = None, stop_loss_price: float = None) -> str:
+    def post_order(self, symbol: str, side: OrderSide, type: OrderType, volume: float, price: float = None,
+                   take_profit_price: float = None, stop_loss_price: float = None) -> str:
         raise NotImplementedError()
 
     @abstractmethod
@@ -56,7 +54,7 @@ class Trade(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_open_position(self, symbol: Symbol) -> Position:
+    def get_open_position(self, symbol: str) -> Position:
         raise NotImplementedError()
 
     @abstractmethod

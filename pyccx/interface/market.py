@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from pyccx.constant.symbol import Symbol
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.ws import WsClient
@@ -32,10 +31,10 @@ class Market(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_candles(self, symbol: Symbol, time_frame: TimeFrame) -> List[Candle]:
+    def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
         raise NotImplementedError()
 
     @abstractmethod
-    def get_historical_candles(self, symbol: Symbol, time_frame: TimeFrame, start_timestamp: int, stop_timestamp) -> \
+    def get_historical_candles(self, symbol: str, time_frame: TimeFrame, start_timestamp: int, stop_timestamp) -> \
             List[Candle]:
         raise NotImplementedError()

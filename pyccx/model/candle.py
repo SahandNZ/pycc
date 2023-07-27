@@ -31,6 +31,20 @@ class Candle:
         return instance
 
     @staticmethod
+    def from_bitget(data: Dict):
+        instance = Candle()
+
+        instance.timestamp = int(int(data[0]) / 1000)
+        instance.datetime = datetime.fromtimestamp(instance.timestamp)
+        instance.open = float(data[1])
+        instance.high = float(data[2])
+        instance.low = float(data[3])
+        instance.close = float(data[4])
+        instance.volume = float(data[5])
+
+        return instance
+
+    @staticmethod
     def from_csv(path: str) -> List:
         candles = []
         with open(path, 'r') as file:

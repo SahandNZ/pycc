@@ -1,13 +1,12 @@
-import time
+from datetime import datetime
 
 from pyccx.constant.order_side import OrderSide
 from pyccx.constant.order_type import OrderType
-from pyccx.constant.symbol import Symbol
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.exchange import Exchange
 
 
-def future_market_examples(exchange: Exchange, symbol: Symbol, time_frame: TimeFrame):
+def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFrame):
     print("\t- Future Market")
 
     # get market server time
@@ -21,13 +20,21 @@ def future_market_examples(exchange: Exchange, symbol: Symbol, time_frame: TimeF
     # # get market info
     # symbols_info = exchange.future.market.get_symbols_info()
 
-
     # get candles
-    # candles = exchange.future.market.get_candles(symbol=symbol, time_frame=time_frame)
-    # print("\t\t- {:<40} {}".format("Last candle open price", candles[-1].open))
+    candles = exchange.future.market.get_candles(symbol=symbol, time_frame=time_frame)
+    print("\t\t- {:<40} {}".format("Last candle open price", candles[-1].open))
+
+    # get historical candles
+    current_timestamp = datetime.now().timestamp() // time_frame * time_frame
+    start_timestamp = current_timestamp - 120 * TimeFrame.DAY1
+    stop_timestamp = start_timestamp + 100 * time_frame
+    candles = exchange.future.market.get_historical_candles(symbol=symbol, time_frame=time_frame,
+                                                            start_timestamp=start_timestamp,
+                                                            stop_timestamp=stop_timestamp)
+    print("\t\t- {:<40} {}".format("Last candle open price", candles[-1].open))
 
 
-def future_trade_examples(exchange: Exchange, symbol: Symbol):
+def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t- Future Trade")
 
     # # post hedge_mode
@@ -52,25 +59,25 @@ def future_trade_examples(exchange: Exchange, symbol: Symbol):
     # long = exchange.future.trade.post_leverage(symbol=symbol, side=PositionSide.LONG, leverage=leverage)
     # short = exchange.future.trade.post_leverage(symbol=symbol, side=PositionSide.SHORT, leverage=leverage)
     # print("\t\t- Post leverage")
-    # print("\t\t\t- {:<36} {}".format(f"Long leverage of {symbol}", long))
-    # print("\t\t\t- {:<36} {}".format(f"Short leverage of {symbol}", short))
+    # print("\t\t\t- {:<36} {}".format("Long leverage of {symbol}", long))
+    # print("\t\t\t- {:<36} {}".format("Short leverage of {symbol}", short))
 
     # # post market order
     # order_id = exchange.future.trade.post_order(symbol=symbol, side=OrderSide.BUY, order_type=OrderType.MARKET,
     #                                             volume=0.001)
     # print("\t\t- Post Market order")
-    # print("\t\t\t- {:<36} {}".format(f"Buy market order", order_id))
+    # print("\t\t\t- {:<36} {}".format("Buy market order", order_id))
 
-    # # post limit order
-    # order_id = exchange.future.trade.post_order(symbol=symbol, side=OrderSide.BUY, order_type=OrderType.LIMIT,
-    #                                             volume=0.001, price=29000.00)
+    # post limit order
+    # order_id = exchange.future.trade.post_order(symbol=symbol, side=OrderSide.BUY, type=OrderType.LIMIT,
+    #                                             volume=10, price=0.155)
     # print("\t\t- Post Limit order")
-    # print("\t\t\t- {:<36} {}".format(f"order id", order_id))
+    # print("\t\t\t- {:<36} {}".format("order id", order_id))
 
     # # get orders
     # orders = exchange.future.trade.get_open_orders()
     # print("\t\t- Get open orders")
-    # print("\t\t\t- {:<36} {}".format(f"orders count", len(orders)))
+    # print("\t\t\t- {:<36} {}".format("orders count", len(orders)))
 
     # # 5 seconds delay
     # time.sleep(5)
@@ -78,15 +85,15 @@ def future_trade_examples(exchange: Exchange, symbol: Symbol):
     # # delete limit order
     # order_id = exchange.future.trade.delete_order(order_id=order_id)
     # print("\t\t- Delete Limit order")
-    # print("\t\t\t- {:<36} {}".format(f"order id", order_id))
+    # print("\t\t\t- {:<36} {}".format("order id", order_id))
 
     # get position
     position = exchange.future.trade.get_open_position(symbol=symbol)
     print("\t\t- Get position")
-    print("\t\t\t- {:<36} {}".format(f"position side", position.side))
-    print("\t\t\t- {:<36} {}".format(f"position volume", position.volume))
+    print("\t\t\t- {:<36} {}".format("side", position.side))
+    print("\t\t\t- {:<36} {}".format("volume", position.volume))
 
 
-def future_examples(exchange: Exchange, symbol: Symbol, time_frame: TimeFrame):
+def future_examples(exchange: Exchange, symbol: str, time_frame: TimeFrame):
     future_market_examples(exchange, symbol, time_frame)
     future_trade_examples(exchange, symbol)
