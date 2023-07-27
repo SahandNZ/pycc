@@ -16,18 +16,15 @@ class BinanceFutureTrade(Trade):
         super().__init__(https, ws)
 
     def post_hedge_mode(self, hedge_mode: HedgeMode):
-        raise NotImplementedError()
-
-    def get_balance(self) -> Balance:
-        endpoint = '/fapi/v2/balance'
-        response = self._https.get(endpoint=endpoint)
-        balance = Balance.from_binance([item for item in response if 'USDT' == item['asset']][0])
-        return balance
-
-    def get_leverage(self, symbol: Symbol, side: PositionSide) -> int:
         pass
 
-    def post_leverage(self, symbol: Symbol, side: PositionSide, leverage: int) -> bool:
+    def get_balance(self) -> Balance:
+        pass
+
+    def get_leverage(self, symbol: Symbol) -> int:
+        pass
+
+    def post_leverage(self, symbol: Symbol, leverage: int) -> bool:
         pass
 
     def get_order(self, order_id: str) -> Order:
