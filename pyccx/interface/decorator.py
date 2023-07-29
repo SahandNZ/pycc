@@ -1,4 +1,4 @@
-from collections import Callable
+from typing import Callable
 
 
 def param_decorator(func: Callable, param: str, encoder: Callable = None, decoder: Callable = None):
