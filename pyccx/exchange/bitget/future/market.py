@@ -33,7 +33,7 @@ class BitgetFutureMarket(Market):
 
     @symbol_decorator
     def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
-        endpoint = "/api/mix/v1/market/history-candles"
+        endpoint = "/api/mix/v1/market/candles"
         stop_timestamp = datetime.now().timestamp() // time_frame * time_frame
         start_timestamp = stop_timestamp - self.max_candles * time_frame
         params = {'symbol': symbol,

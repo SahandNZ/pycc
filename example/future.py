@@ -24,14 +24,14 @@ def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFram
     candles = exchange.future.market.get_candles(symbol=symbol, time_frame=time_frame)
     print("\t\t- {:<40} {}".format("Last candle open price", candles[-1].open))
 
-    # get historical candles
-    current_timestamp = datetime.now().timestamp() // time_frame * time_frame
-    start_timestamp = current_timestamp - 120 * TimeFrame.DAY1
-    stop_timestamp = start_timestamp + 100 * time_frame
-    candles = exchange.future.market.get_historical_candles(symbol=symbol, time_frame=time_frame,
-                                                            start_timestamp=start_timestamp,
-                                                            stop_timestamp=stop_timestamp)
-    print("\t\t- {:<40} {}".format("Last candle open price", candles[-1].open))
+    # # get historical candles
+    # current_timestamp = datetime.now().timestamp() // time_frame * time_frame
+    # start_timestamp = current_timestamp - 120 * TimeFrame.DAY1
+    # stop_timestamp = start_timestamp + 100 * time_frame
+    # candles = exchange.future.market.get_historical_candles(symbol=symbol, time_frame=time_frame,
+    #                                                         start_timestamp=start_timestamp,
+    #                                                         stop_timestamp=stop_timestamp)
+    # print("\t\t- {:<40} {}".format("Last candle open price", candles[-1].open))
 
 
 def future_trade_examples(exchange: Exchange, symbol: str):
@@ -55,12 +55,10 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     # print("\t\t\t- {:<36} {}".format(f"Short leverage of {symbol}", short))
 
     # # post long leverage
-    # leverage = 50
-    # long = exchange.future.trade.post_leverage(symbol=symbol, side=PositionSide.LONG, leverage=leverage)
-    # short = exchange.future.trade.post_leverage(symbol=symbol, side=PositionSide.SHORT, leverage=leverage)
-    # print("\t\t- Post leverage")
-    # print("\t\t\t- {:<36} {}".format("Long leverage of {symbol}", long))
-    # print("\t\t\t- {:<36} {}".format("Short leverage of {symbol}", short))
+    leverage = 20
+    long = exchange.future.trade.set_leverage(symbol=symbol, leverage=leverage)
+    print("\t\t- Post leverage")
+    print("\t\t\t- {:<36} {}".format(f"leverage of {symbol}", long))
 
     # # post market order
     # order_id = exchange.future.trade.post_order(symbol=symbol, side=OrderSide.BUY, order_type=OrderType.MARKET,

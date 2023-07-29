@@ -15,7 +15,7 @@ class BinanceFutureTrade(Trade):
     def __init__(self, https: HttpsClient, ws: WsClient):
         super().__init__(https, ws)
 
-    def post_hedge_mode(self, hedge_mode: HedgeMode):
+    def set_hedge_mode(self, hedge_mode: HedgeMode):
         pass
 
     def get_balance(self) -> Balance:
@@ -24,7 +24,7 @@ class BinanceFutureTrade(Trade):
     def get_leverage(self, symbol: Symbol) -> int:
         pass
 
-    def post_leverage(self, symbol: Symbol, leverage: int) -> bool:
+    def set_leverage(self, symbol: Symbol, leverage: int) -> bool:
         pass
 
     def get_order(self, order_id: str) -> Order:
@@ -33,14 +33,14 @@ class BinanceFutureTrade(Trade):
     def get_open_orders(self) -> List[Order]:
         pass
 
-    def post_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
-                   price: float = None, take_profit_price: float = None, stop_loss_price: float = None) -> str:
+    def set_order(self, symbol: Symbol, side: OrderSide, order_type: OrderType, volume: float,
+                  price: float = None, take_profit_price: float = None, stop_loss_price: float = None) -> str:
         pass
 
-    def delete_order(self, order_id: str) -> bool:
+    def cancel_order(self, order_id: str) -> bool:
         pass
 
-    def delete_all_orders(self) -> bool:
+    def cancel_all_orders(self) -> bool:
         pass
 
     def get_open_position(self, symbol: Symbol) -> Position:

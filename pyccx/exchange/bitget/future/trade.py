@@ -17,7 +17,7 @@ class BitgetFutureTrade(Trade):
         self.__oid2symbol: Dict[str, str] = {}
 
     @hedge_mode_decorator
-    def post_hedge_mode(self, hedge_mode: HedgeMode):
+    def set_hedge_mode(self, hedge_mode: HedgeMode):
         endpoint = "/api/mix/v1/account/setPositionMode"
         params = {"productType": "umcbl", "holdMode": hedge_mode}
         response = self._https.post(endpoint=endpoint, params=params, sign=True)
@@ -31,11 +31,16 @@ class BitgetFutureTrade(Trade):
         balance = Balance.from_bitget(response[0])
         return balance
 
+    @symbol_decorator
     def get_leverage(self, symbol: str) -> int:
         raise NotImplementedError()
 
-    def post_leverage(self, symbol: str, leverage: int) -> bool:
-        raise NotImplementedError()
+    @symbol_decorator
+    def set_leverage(self, symbol: str, leverage: int) -> bool:
+        endpoint = "/api/mix/v1/account/setLeverage"
+        params = {"symbol": symbol, "marginCoin": "USDT", "leverage": str(leverage)}
+        response = self._https.post(endpoint=endpoint, params=params, sign=True)
+        return True
 
     @symbol_decorator
     @order_side_decorator
@@ -63,8 +68,8 @@ class BitgetFutureTrade(Trade):
     @symbol_decorator
     @order_side_decorator
     @order_type_decorator
-    def post_order(self, symbol: str, side: OrderSide, type: OrderType, volume: float, price: float = None,
-                   take_profit_price: float = None, stop_loss_price: float = None) -> str:
+    def set_order(self, symbol: str, side: OrderSide, type: OrderType, volume: float, price: float = None,
+                  take_profit_price: float = None, stop_loss_price: float = None) -> str:
         endpoint = "/api/mix/v1/order/placeOrder"
         params = {"symbol": symbol, "marginCoin": "USDT", "size": str(volume), "side": side, "orderType": type}
         if price is not None:
@@ -78,7 +83,7 @@ class BitgetFutureTrade(Trade):
         self.__oid2symbol[order_id] = symbol
         return order_id
 
-    def delete_order(self, order_id: str) -> bool:
+    def cancel_order(self, order_id: str) -> bool:
         endpoint = "/api/mix/v1/order/cancel-order"
         symbol = self.__oid2symbol[order_id]
         params = {"symbol": symbol, "marginCoin": "USDT", "orderId": str(order_id)}
@@ -87,7 +92,7 @@ class BitgetFutureTrade(Trade):
         del self.__oid2symbol[order_id]
         return order_id
 
-    def delete_all_orders(self) -> bool:
+    def cancel_all_orders(self) -> bool:
         endpoint = "/api/mix/v1/order/cancel-all-orders"
         params = {"productType": "umcbl", "marginCoin": "USDT"}
         response = self._https.post(endpoint=endpoint, params=params, sign=True)

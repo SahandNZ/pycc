@@ -2,16 +2,16 @@ import hashlib
 import hmac
 import json
 from datetime import datetime
-from requests import Response
 from typing import Dict, Tuple
 from urllib import parse
 
 from pyccx.exchange.binance.future.exception import BinanceFutureHttpsException
 from pyccx.interface.https import HttpsClient
+from requests import Response
 
 
 class BinanceFutureHttpsClient(HttpsClient):
-    def __init__(self, key: str, secret_key: str):
+    def __init__(self, key: str = None, secret_key: str = None):
         super().__init__(base_url='https://fapi.binance.com', key=key, secret_key=secret_key)
 
     def sign(self, method: str, endpoint: str, params: Dict, request_time: int) -> str:

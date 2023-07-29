@@ -12,7 +12,7 @@ from requests import Response
 
 
 class BitgetFutureHttpsClient(HttpsClient):
-    def __init__(self, passphrase: str, key: str, secret_key: str):
+    def __init__(self, key: str = None, secret_key: str = None, passphrase: str = None):
         super().__init__(base_url="https://api.bitget.com", key=key, secret_key=secret_key)
         self._passphrase: str = passphrase
 

@@ -17,7 +17,7 @@ class Trade(ABC):
         self._ws: WsClient = ws
 
     @abstractmethod
-    def post_hedge_mode(self, hedge_mode: HedgeMode):
+    def set_hedge_mode(self, hedge_mode: HedgeMode):
         raise NotImplementedError()
 
     @abstractmethod
@@ -29,7 +29,7 @@ class Trade(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def post_leverage(self, symbol: str, leverage: int) -> int:
+    def set_leverage(self, symbol: str, leverage: int) -> bool:
         raise NotImplementedError()
 
     @abstractmethod
@@ -41,16 +41,16 @@ class Trade(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def post_order(self, symbol: str, side: OrderSide, type: OrderType, volume: float, price: float = None,
-                   take_profit_price: float = None, stop_loss_price: float = None) -> str:
+    def set_order(self, symbol: str, side: OrderSide, type: OrderType, volume: float, price: float = None,
+                  take_profit_price: float = None, stop_loss_price: float = None) -> str:
         raise NotImplementedError()
 
     @abstractmethod
-    def delete_order(self, order_id: int) -> bool:
+    def cancel_order(self, order_id: int) -> bool:
         raise NotImplementedError()
 
     @abstractmethod
-    def delete_all_orders(self) -> bool:
+    def cancel_all_orders(self) -> bool:
         raise NotImplementedError()
 
     @abstractmethod

@@ -15,17 +15,17 @@ class Exchange:
 
     @staticmethod
     def from_config(conf_dict: Dict):
-        name = conf_dict.pop('name')
+        exchange_name = conf_dict.pop('exchange')
 
         # TODO create wallet and spot instance
         wallet = None
         spot = None
 
         # create future instance
-        https_cls = import_class(module=f"pyccx.exchange.{name}.future.https")
-        ws_cls = import_class(module=f"pyccx.exchange.{name}.future.ws")
-        market_cls = import_class(module=f"pyccx.exchange.{name}.future.market")
-        trade_cls = import_class(module=f"pyccx.exchange.{name}.future.trade")
+        https_cls = import_class(module=f"pyccx.exchange.{exchange_name}.future.https")
+        ws_cls = import_class(module=f"pyccx.exchange.{exchange_name}.future.ws")
+        market_cls = import_class(module=f"pyccx.exchange.{exchange_name}.future.market")
+        trade_cls = import_class(module=f"pyccx.exchange.{exchange_name}.future.trade")
 
         https = https_cls(**conf_dict)
         ws = ws_cls(**conf_dict)
@@ -33,7 +33,7 @@ class Exchange:
         trade = trade_cls(https, ws)
         future = Future(market=market, trade=trade)
 
-        return Exchange(name=name, wallet=wallet, spot=spot, future=future)
+        return Exchange(name=exchange_name, wallet=wallet, spot=spot, future=future)
 
     @property
     def wallet(self) -> Wallet:
