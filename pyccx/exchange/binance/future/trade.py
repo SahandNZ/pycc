@@ -106,5 +106,5 @@ class BinanceFutureTrade(Trade):
         endpoint = "/fapi/v2/positionRisk"
         params = {"symbol": symbol}
         response = self._https.get(endpoint=endpoint, params=params, sign=True)
-        position = Position.from_binance(response)
+        position = Position.from_binance(response[0])
         return position
