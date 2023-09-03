@@ -9,6 +9,16 @@ class Balance:
         self.margin: float = None
 
     @staticmethod
+    def from_binance(data: Dict):
+        instance = Balance()
+
+        instance.asset = data['asset']
+        instance.available = round(float(data['availableBalance']), 2)
+        instance.frozen = None
+
+        return instance
+
+    @staticmethod
     def from_bitget(data: Dict):
         instance = Balance()
 

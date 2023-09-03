@@ -25,8 +25,8 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config-path', action='store', type=str, required=False, default="config.json")
-    parser.add_argument('-e', '--exchange', action='store', type=str, required=False, default="bitget")
-    parser.add_argument('-s', '--symbol', action='store', type=str, required=False, default='STMX-USDT')
+    parser.add_argument('-e', '--exchange', action='store', type=str, required=False, default="binance")
+    parser.add_argument('-s', '--symbol', action='store', type=str, required=False, default='BTC-USDT')
     parser.add_argument('-tf', '--time-frame', action='store', type=int, required=False, default=60)
     args = parser.parse_args()
 
