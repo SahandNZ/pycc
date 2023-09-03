@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import List
 
-from pyccx.exchange.binance.future.decorators import *
+from pyccx.constant.time_frame import TimeFrame
+from pyccx.exchange.binance.future.decorator import *
+from pyccx.exchange.binance.future.encoder import *
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.market import Market
 from pyccx.interface.ws import WsClient
@@ -51,7 +53,7 @@ class BinanceFutureMarket(Market):
         endpoint = '/fapi/v1/klines'
         limit = (stop_timestamp - start_timestamp) // time_frame
         params = {'symbol': symbol,
-                  'interval': encode_time_frame(time_frame),
+                  'interval': time_frame_encoder(time_frame),
                   'startTime': int(start_timestamp * 1000),
                   'endTime': int(stop_timestamp * 1000),
                   'limit': int(limit)}
