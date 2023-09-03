@@ -24,8 +24,8 @@ class BinanceFutureTrade(Trade):
     def get_balance(self) -> Balance:
         endpoint = "/fapi/v2/balance"
         response = self._https.get(endpoint=endpoint, sign=True)
-        usdt_response = [item for item in response if 'USDT' == item['asset']]
-        balance = Balance.from_binance(usdt_response)
+        response = [item for item in response if 'USDT' == item['asset']][0]
+        balance = Balance.from_binance(response)
         return balance
 
     def get_leverage(self, symbol: str) -> int:
