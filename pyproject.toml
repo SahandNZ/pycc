@@ -17,6 +17,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "pandas==1.5.3",
-    "requests==2.31.0"
+    "pandas",
+    "requests"
 ]

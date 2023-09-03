@@ -56,12 +56,6 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t\t- Post leverage")
     print("\t\t\t- {:<36} {}".format(f"leverage of {symbol}", leverage))
 
-    # # post market order
-    # order_id = exchange.future.trade.post_order(symbol=symbol, side=OrderSide.BUY, order_type=OrderType.MARKET,
-    #                                             volume=0.001)
-    # print("\t\t- Post Market order")
-    # print("\t\t\t- {:<36} {}".format("Buy market order", order_id))
-
     # post limit order
     order_id = exchange.future.trade.set_limit_order(symbol=symbol, side=OrderSide.BUY, volume=0.001, price=20000)
     print("\t\t- Post Limit order")
@@ -90,11 +84,35 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t\t- Cancel all orders")
     print("\t\t\t- {:<36} {}".format("order id", order_id))
 
+    # post market order to open long position
+    order_id = exchange.future.trade.set_market_order(symbol=symbol, side=OrderSide.BUY, volume=0.001)
+    print("\t\t- Post Market order")
+    print("\t\t\t- {:<36} {}".format("Buy market order", order_id))
+
     # get position
     position = exchange.future.trade.get_open_position(symbol=symbol)
     print("\t\t- Get position")
+    print("\t\t\t- {:<36} {}".format("symbol", position.symbol))
     print("\t\t\t- {:<36} {}".format("side", position.side))
     print("\t\t\t- {:<36} {}".format("volume", position.volume))
+    print("\t\t\t- {:<36} {}".format("Entry price", position.entry_price))
+    print("\t\t\t- {:<36} {}".format("Liquidation price", position.leverage))
+    print("\t\t\t- {:<36} {}".format("Liquidation price", position.liquidation_price))
+
+    # post market order to close long position
+    order_id = exchange.future.trade.set_market_order(symbol=symbol, side=OrderSide.SELL, volume=position.volume)
+    print("\t\t- Post Market order")
+    print("\t\t\t- {:<36} {}".format("Buy market order", order_id))
+
+    # get position
+    position = exchange.future.trade.get_open_position(symbol=symbol)
+    print("\t\t- Get position")
+    print("\t\t\t- {:<36} {}".format("symbol", position.symbol))
+    print("\t\t\t- {:<36} {}".format("side", position.side))
+    print("\t\t\t- {:<36} {}".format("volume", position.volume))
+    print("\t\t\t- {:<36} {}".format("Entry price", position.entry_price))
+    print("\t\t\t- {:<36} {}".format("Liquidation price", position.leverage))
+    print("\t\t\t- {:<36} {}".format("Liquidation price", position.liquidation_price))
 
 
 def future_examples(exchange: Exchange, symbol: str, time_frame: TimeFrame):

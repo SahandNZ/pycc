@@ -103,4 +103,8 @@ class BinanceFutureTrade(Trade):
 
     @symbol_decorator
     def get_open_position(self, symbol: str) -> Position:
-        pass
+        endpoint = "/fapi/v2/positionRisk"
+        params = {"symbol": symbol}
+        response = self._https.get(endpoint=endpoint, params=params, sign=True)
+        position = Position.from_binance(response)
+        return position

@@ -17,6 +17,23 @@ class Position:
         self.liquidation_price: float = None
 
     @staticmethod
+    def from_binance(data: Dict):
+        instance = Position()
+
+        instance.symbol = data['symbol']
+        instance.side = PositionSide.LONG if 0 < data['positionAmt'] else \
+            PositionSide.SHORT if data['positionAmt'] < 0 else None
+        instance.type = data['marginType']
+        instance.margin = None
+        instance.volume = abs(float(data['positionAmt']))
+        instance.entry_price = float(data['entryPrice'])
+        instance.profit = float(data['unRealizedProfit'])
+        instance.leverage = float(data['leverage'])
+        instance.liquidation_price = float(data['liquidationPrice'])
+
+        return instance
+
+    @staticmethod
     def from_bitget(data: Dict):
         if 0 == len(data):
             return None
