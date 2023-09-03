@@ -67,17 +67,27 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t\t- Post Limit order")
     print("\t\t\t- {:<36} {}".format("order id", order_id))
 
+    # post limit order again
+    order_id = exchange.future.trade.set_limit_order(symbol=symbol, side=OrderSide.BUY, volume=0.001, price=21000)
+    print("\t\t- Post Limit order")
+    print("\t\t\t- {:<36} {}".format("order id", order_id))
+
     # get orders
-    orders = exchange.future.trade.get_open_orders(symbol)
+    orders = exchange.future.trade.get_open_orders(symbol=symbol)
     print("\t\t- Get open orders")
     print("\t\t\t- {:<36} {}".format("orders count", len(orders)))
 
     # 5 seconds delay
     time.sleep(5)
 
-    # delete limit order
+    # cancel limit order
     order_id = exchange.future.trade.cancel_order(symbol=symbol, order_id=order_id)
-    print("\t\t- Delete Limit order")
+    print("\t\t- Cancel last limit order")
+    print("\t\t\t- {:<36} {}".format("order id", order_id))
+
+    # cancel all order
+    order_id = exchange.future.trade.cancel_all_orders(symbol=symbol)
+    print("\t\t- Cancel all orders")
     print("\t\t\t- {:<36} {}".format("order id", order_id))
 
     # get position

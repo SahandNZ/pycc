@@ -14,13 +14,6 @@ class BinanceFutureTrade(Trade):
     def __init__(self, https: HttpsClient, ws: WsClient):
         super().__init__(https, ws)
 
-    def set_hedge_mode(self, hedge_mode: HedgeMode):
-        endpoint = "/fapi/v1/positionSide/dual"
-        params = {"dualSidePosition": hedge_mode == HedgeMode.TWO_WAY}
-        response = self._https.post(endpoint=endpoint, params=params, sign=True)
-        mode = HedgeMode.TWO_WAY if response['dualSidePosition'] else HedgeMode.ONE_WAY
-        return mode
-
     def get_balance(self) -> Balance:
         endpoint = "/fapi/v2/balance"
         response = self._https.get(endpoint=endpoint, sign=True)
