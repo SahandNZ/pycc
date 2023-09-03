@@ -1,5 +1,7 @@
 from typing import Dict
 
+import numpy as np
+
 from pyccx.constant.position_side import PositionSide
 from pyccx.constant.position_type import PositionType
 
@@ -21,8 +23,7 @@ class Position:
         instance = Position()
 
         instance.symbol = data['symbol']
-        instance.side = PositionSide.LONG if 0 < data['positionAmt'] else \
-            PositionSide.SHORT if data['positionAmt'] < 0 else None
+        instance.side = np.sign(float(data['positionAmt'])) if 0 != float(data['positionAmt']) else None
         instance.type = data['marginType']
         instance.margin = None
         instance.volume = abs(float(data['positionAmt']))
