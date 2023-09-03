@@ -21,7 +21,7 @@ def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFram
     symbols_info = exchange.future.market.get_symbols_info()
     symbol_info = symbols_info[0]
     print("\t\t- {:<40}".format("Symbols info"))
-    print("\t\t\t- {:<40} {}".format(symbol_info.symbol + " Price precision", symbol_info.price_precision))
+    print("\t\t\t- {:<32} {}".format(symbol_info.symbol + " Price precision", symbol_info.price_precision))
 
     # get candles
     candles = exchange.future.market.get_candles(symbol=symbol, time_frame=time_frame)
