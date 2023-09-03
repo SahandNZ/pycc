@@ -38,7 +38,7 @@ class BinanceFutureTrade(Trade):
 
     @symbol_decorator
     def set_leverage(self, symbol: str, leverage: int) -> bool:
-        endpoint = "/fapi/v2/positionRisk"
+        endpoint = "/fapi/v1/leverage"
         params = {"symbol": symbol, "leverage": leverage}
         response = self._https.post(endpoint=endpoint, params=params, sign=True)
         leverage = response[0]['leverage']
