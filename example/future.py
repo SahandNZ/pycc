@@ -95,8 +95,8 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t\t\t- {:<36} {}".format("symbol", position.symbol))
     print("\t\t\t- {:<36} {}".format("side", position.side))
     print("\t\t\t- {:<36} {}".format("volume", position.volume))
+    print("\t\t\t- {:<36} {}".format("Leverage", position.leverage))
     print("\t\t\t- {:<36} {}".format("Entry price", position.entry_price))
-    print("\t\t\t- {:<36} {}".format("Liquidation price", position.leverage))
     print("\t\t\t- {:<36} {}".format("Liquidation price", position.liquidation_price))
 
     # post market order to close long position
@@ -110,8 +110,8 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t\t\t- {:<36} {}".format("symbol", position.symbol))
     print("\t\t\t- {:<36} {}".format("side", position.side))
     print("\t\t\t- {:<36} {}".format("volume", position.volume))
+    print("\t\t\t- {:<36} {}".format("Leverage", position.leverage))
     print("\t\t\t- {:<36} {}".format("Entry price", position.entry_price))
-    print("\t\t\t- {:<36} {}".format("Liquidation price", position.leverage))
     print("\t\t\t- {:<36} {}".format("Liquidation price", position.liquidation_price))
 
 

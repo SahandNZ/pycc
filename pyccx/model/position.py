@@ -23,7 +23,7 @@ class Position:
         instance = Position()
 
         instance.symbol = data['symbol']
-        instance.side = np.sign(float(data['positionAmt'])) if 0 != float(data['positionAmt']) else None
+        instance.side = np.sign(float(data['positionAmt']))
         instance.type = data['marginType']
         instance.margin = None
         instance.volume = abs(float(data['positionAmt']))
