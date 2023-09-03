@@ -91,14 +91,14 @@ class BinanceFutureTrade(Trade):
     def cancel_order(self, symbol: str, order_id: str) -> bool:
         endpoint = "/fapi/v1/order"
         params = {"symbol": symbol, "orderId": order_id}
-        response = self._https.get(endpoint=endpoint, params=params, sign=True)
+        response = self._https.delete(endpoint=endpoint, params=params, sign=True)
         return True
 
     @symbol_decorator
     def cancel_all_orders(self, symbol: str) -> bool:
         endpoint = "/fapi/v1/allOpenOrders"
         params = {"symbol": symbol}
-        response = self._https.get(endpoint=endpoint, params=params, sign=True)
+        response = self._https.delete(endpoint=endpoint, params=params, sign=True)
         return True
 
     @symbol_decorator
