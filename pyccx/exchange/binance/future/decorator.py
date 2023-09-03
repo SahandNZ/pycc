@@ -1,5 +1,5 @@
-from pyccx.exchange.bitget.future.decoder import *
-from pyccx.exchange.bitget.future.encoder import *
+from pyccx.exchange.binance.future.decoder import *
+from pyccx.exchange.binance.future.encoder import *
 from pyccx.interface.decorator import param_decorator
 
 
