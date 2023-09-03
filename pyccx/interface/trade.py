@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from pyccx.constant.hedge_mode import HedgeMode
 from pyccx.constant.order_side import OrderSide
-from pyccx.constant.order_type import OrderType
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.ws import WsClient
 from pyccx.model.balance import Balance
@@ -15,10 +13,6 @@ class Trade(ABC):
     def __init__(self, https: HttpsClient, ws: WsClient):
         self._https: HttpsClient = https
         self._ws: WsClient = ws
-
-    @abstractmethod
-    def set_hedge_mode(self, hedge_mode: HedgeMode):
-        raise NotImplementedError()
 
     @abstractmethod
     def get_balance(self) -> Balance:
@@ -33,30 +27,33 @@ class Trade(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_order(self, order_id: int) -> Order:
+    def get_order(self, symbol: str, order_id: str) -> Order:
         raise NotImplementedError()
 
     @abstractmethod
-    def get_open_orders(self) -> List[Order]:
+    def get_open_orders(self, symbol: str) -> List[Order]:
         raise NotImplementedError()
 
     @abstractmethod
-    def set_order(self, symbol: str, side: OrderSide, type: OrderType, volume: float, price: float = None,
-                  take_profit_price: float = None, stop_loss_price: float = None) -> str:
+    def set_market_order(self, symbol: str, side: OrderSide, volume: float) -> str:
         raise NotImplementedError()
 
     @abstractmethod
-    def cancel_order(self, order_id: int) -> bool:
+    def set_limit_order(self, symbol: str, side: OrderSide, volume: float, price: float) -> str:
         raise NotImplementedError()
 
     @abstractmethod
-    def cancel_all_orders(self) -> bool:
+    def set_stop_market_order(self, symbol: str, side: OrderSide, volume: float, stop_price: float) -> str:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def cancel_order(self, symbol: str, order_id: str) -> bool:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def cancel_all_orders(self, symbol: str) -> bool:
         raise NotImplementedError()
 
     @abstractmethod
     def get_open_position(self, symbol: str) -> Position:
-        raise NotImplementedError()
-
-    @abstractmethod
-    def get_open_positions(self) -> List[Position]:
         raise NotImplementedError()

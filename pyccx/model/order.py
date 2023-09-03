@@ -17,6 +17,23 @@ class Order:
         self.side: OrderSide = None
         self.volume: float = None
         self.price: float = None
+        self.stop_price: float = None
+
+    @staticmethod
+    def from_binance(data: Dict):
+        instance = Order()
+
+        instance.id = data['orderId']
+        instance.symbol = data['symbol']
+        instance.datetime = datetime.fromtimestamp(int(data['time']) / 1000)
+        instance.timestamp = int(int(data['time']) / 1000)
+        instance.type = data['type']
+        instance.status = data['status']
+        instance.side = data['side']
+        instance.volume = float(data['origQty'])
+        instance.price = float(data['price'])
+
+        return instance
 
     @staticmethod
     def from_bitget(data: Dict):

@@ -9,25 +9,19 @@ def time_frame_encoder(time_frame: int) -> int:
     week = day // 7
     if minute < 60:
         return "{}m".format(minute)
-    elif hour < 6:
-        return "{}H".format(hour)
     elif hour < 24:
-        return "{}Hutc".format(hour)
+        return "{}h".format(hour)
     elif day < 7:
-        return "{}Duts".format(day)
+        return "{}d".format(day)
     elif week < 4:
-        return "{}Wutc".format(week)
+        return "{}w".format(week)
     else:
-        return "1Mutc"
-
-
-def hedge_mode_encoder(hedge_mode: int) -> str:
-    return "single_hold" if 1 == hedge_mode else "double_hold"
+        return "1M"
 
 
 def order_side_encoder(order_side: int) -> str:
-    return "buy_single" if 1 == order_side else "sell_single"
+    return "BUY" if 1 == order_side else "SELL"
 
 
 def order_type_encoder(order_type: int) -> str:
-    return "limit" if 1 == order_type else "market"
+    return "LIMIT" if 1 == order_type else "MARKET"

@@ -44,24 +44,66 @@ class BinanceFutureTrade(Trade):
         leverage = response['leverage']
         return leverage
 
-    def get_order(self, order_id: str) -> Order:
-        pass
+    @symbol_decorator
+    @order_side_decorator
+    @order_type_decorator
+    @order_status_decorator
+    def get_order(self, symbol: str, order_id: str) -> Order:
+        endpoint = "/fapi/v1/openOrders"
+        params = {"symbol": symbol, "orderId": order_id}
+        response = self._https.get(endpoint=endpoint, params=params, sign=True)
+        orders = Order.from_binance(response)
+        return orders
 
-    def get_open_orders(self) -> List[Order]:
-        pass
+    @symbol_decorator
+    @order_side_decorator
+    @order_type_decorator
+    @order_status_decorator
+    def get_open_orders(self, symbol: str) -> List[Order]:
+        endpoint = "/fapi/v1/openOrders"
+        params = {"symbol": symbol}
+        response = self._https.get(endpoint=endpoint, params=params, sign=True)
+        orders = [Order.from_binance(item) for item in response]
+        return orders
 
-    def set_order(self, symbol: str, side: OrderSide, order_type: OrderType, volume: float,
-                  price: float = None, take_profit_price: float = None, stop_loss_price: float = None) -> str:
-        pass
+    @symbol_decorator
+    @order_side_decorator
+    def set_market_order(self, symbol: str, side: OrderSide, volume: float) -> str:
+        endpoint = "/fapi/v1/order"
+        params = {"symbol": symbol, "side": side, "type": "MARKET", "quantity": volume}
+        response = self._https.post(endpoint=endpoint, params=params, sign=True)
+        order_id = response["orderId"]
+        return order_id
 
-    def cancel_order(self, order_id: str) -> bool:
-        pass
+    @symbol_decorator
+    @order_side_decorator
+    def set_limit_order(self, symbol: str, side: OrderSide, volume: float, price: float) -> str:
+        endpoint = "/fapi/v1/order"
+        params = {"symbol": symbol, "side": side, "type": "LIMIT", "quantity": volume, "price": price}
+        response = self._https.post(endpoint=endpoint, params=params, sign=True)
+        order_id = response["orderId"]
+        return order_id
 
-    def cancel_all_orders(self) -> bool:
-        pass
+    @symbol_decorator
+    @order_side_decorator
+    def set_stop_market_order(self, symbol: str, side: OrderSide, volume: float, stop_price: float) -> str:
+        endpoint = "/fapi/v1/order"
+        params = {"symbol": symbol, "side": side, "type": "LIMIT", "quantity": volume, "stopPrice": stop_price}
+        response = self._https.post(endpoint=endpoint, params=params, sign=True)
+        order_id = response["orderId"]
+        return order_id
+
+    def cancel_order(self, symbol: str, order_id: str) -> bool:
+        endpoint = "/fapi/v1/order"
+        params = {"symbol": symbol, "orderId": order_id}
+        response = self._https.get(endpoint=endpoint, params=params, sign=True)
+        return True
+
+    def cancel_all_orders(self, symbol: str) -> bool:
+        endpoint = "/fapi/v1/allOpenOrders"
+        params = {"symbol": symbol}
+        response = self._https.get(endpoint=endpoint, params=params, sign=True)
+        return True
 
     def get_open_position(self, symbol: str) -> Position:
-        pass
-
-    def get_open_positions(self) -> List[Position]:
         pass

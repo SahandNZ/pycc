@@ -11,10 +11,6 @@ def time_frame_decorator(func):
     return param_decorator(func=func, param='time_frame', encoder=time_frame_encoder, decoder=None)
 
 
-def hedge_mode_decorator(func):
-    return param_decorator(func=func, param='hedge_mode', encoder=hedge_mode_encoder, decoder=None)
-
-
 def order_side_decorator(func):
     return param_decorator(func=func, param='side', encoder=order_side_encoder, decoder=order_side_decoder)
 
@@ -29,7 +25,3 @@ def order_status_decorator(func):
 
 def position_side_decorator(func):
     return param_decorator(func=func, param='side', encoder=None, decoder=position_side_decoder)
-
-
-def position_type_decorator(func):
-    return param_decorator(func=func, param='type', encoder=None, decoder=position_type_decoder)

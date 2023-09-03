@@ -1,6 +1,7 @@
 import random
+import time
 
-from pyccx.constant.hedge_mode import HedgeMode
+from pyccx.constant.order_side import OrderSide
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.exchange import Exchange
 
@@ -39,11 +40,6 @@ def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFram
 def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t- Future Trade")
 
-    # # post hedge_mode
-    # mode = exchange.future.trade.set_hedge_mode(hedge_mode=HedgeMode.ONE_WAY)
-    # print("\t\t- Post Hedge mode")
-    # print("\t\t\t- {:<36} {}".format("Mode", mode))
-
     # get balance
     balance = exchange.future.trade.get_balance()
     print("\t\t- Get balance")
@@ -55,7 +51,7 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t\t\t- {:<36} {}".format(f"leverage of {symbol}", leverage))
 
     # post long leverage
-    leverage = random.randint(1, 10)
+    leverage = random.randint(15, 20)
     exchange.future.trade.set_leverage(symbol=symbol, leverage=leverage)
     print("\t\t- Post leverage")
     print("\t\t\t- {:<36} {}".format(f"leverage of {symbol}", leverage))
@@ -67,23 +63,22 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     # print("\t\t\t- {:<36} {}".format("Buy market order", order_id))
 
     # post limit order
-    # order_id = exchange.future.trade.post_order(symbol=symbol, side=OrderSide.BUY, type=OrderType.LIMIT,
-    #                                             volume=10, price=0.155)
-    # print("\t\t- Post Limit order")
-    # print("\t\t\t- {:<36} {}".format("order id", order_id))
+    order_id = exchange.future.trade.set_limit_order(symbol=symbol, side=OrderSide.BUY, volume=0.001, price=20000)
+    print("\t\t- Post Limit order")
+    print("\t\t\t- {:<36} {}".format("order id", order_id))
 
-    # # get orders
-    # orders = exchange.future.trade.get_open_orders()
-    # print("\t\t- Get open orders")
-    # print("\t\t\t- {:<36} {}".format("orders count", len(orders)))
+    # get orders
+    orders = exchange.future.trade.get_open_orders(symbol)
+    print("\t\t- Get open orders")
+    print("\t\t\t- {:<36} {}".format("orders count", len(orders)))
 
-    # # 5 seconds delay
-    # time.sleep(5)
+    # 5 seconds delay
+    time.sleep(5)
 
-    # # delete limit order
-    # order_id = exchange.future.trade.delete_order(order_id=order_id)
-    # print("\t\t- Delete Limit order")
-    # print("\t\t\t- {:<36} {}".format("order id", order_id))
+    # delete limit order
+    order_id = exchange.future.trade.cancel_order(symbol=symbol, order_id=order_id)
+    print("\t\t- Delete Limit order")
+    print("\t\t\t- {:<36} {}".format("order id", order_id))
 
     # get position
     position = exchange.future.trade.get_open_position(symbol=symbol)
