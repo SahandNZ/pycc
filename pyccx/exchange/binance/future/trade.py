@@ -79,7 +79,8 @@ class BinanceFutureTrade(Trade):
     @order_side_decorator
     def set_limit_order(self, symbol: str, side: OrderSide, volume: float, price: float) -> str:
         endpoint = "/fapi/v1/order"
-        params = {"symbol": symbol, "side": side, "type": "LIMIT", "quantity": volume, "price": price}
+        params = {"symbol": symbol, "side": side, "type": "LIMIT", "quantity": volume, "price": price,
+                  "timeInForce": "GTC"}
         response = self._https.post(endpoint=endpoint, params=params, sign=True)
         order_id = response["orderId"]
         return order_id
