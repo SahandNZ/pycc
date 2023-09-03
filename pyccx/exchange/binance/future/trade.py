@@ -1,7 +1,7 @@
 from typing import List
 
 from pyccx.constant.hedge_mode import HedgeMode
-from pyccx.exchange.binance.future.decorators import *
+from pyccx.exchange.binance.future.decorator import *
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.trade import Trade
 from pyccx.interface.ws import WsClient
@@ -28,9 +28,15 @@ class BinanceFutureTrade(Trade):
         balance = Balance.from_binance(response)
         return balance
 
+    @symbol_decorator
     def get_leverage(self, symbol: str) -> int:
-        pass
+        endpoint = "/fapi/v2/positionRisk"
+        params = {"symbol": symbol}
+        response = self._https.get(endpoint=endpoint, params=params, sign=True)
+        leverage = response[0]['leverage']
+        return leverage
 
+    @symbol_decorator
     def set_leverage(self, symbol: str, leverage: int) -> bool:
         pass
 
