@@ -1,3 +1,5 @@
+import random
+
 from pyccx.constant.hedge_mode import HedgeMode
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.exchange import Exchange
@@ -47,18 +49,16 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t\t- Get balance")
     print("\t\t\t- {:<36} {}".format("Available", balance.available))
 
-    # # get long leverage
-    # long = exchange.future.trade.get_leverage(symbol=symbol, side=PositionSide.LONG)
-    # short = exchange.future.trade.get_leverage(symbol=symbol, side=PositionSide.SHORT)
-    # print("\t\t- Get leverage")
-    # print("\t\t\t- {:<36} {}".format(f"Long leverage of {symbol}", long))
-    # print("\t\t\t- {:<36} {}".format(f"Short leverage of {symbol}", short))
+    # get long leverage
+    leverage = exchange.future.trade.get_leverage(symbol=symbol)
+    print("\t\t- Get leverage")
+    print("\t\t\t- {:<36} {}".format(f"leverage of {symbol}", leverage))
 
-    # # post long leverage
-    leverage = 20
-    long = exchange.future.trade.set_leverage(symbol=symbol, leverage=leverage)
+    # post long leverage
+    leverage = random.randint(1, 10)
+    exchange.future.trade.set_leverage(symbol=symbol, leverage=leverage)
     print("\t\t- Post leverage")
-    print("\t\t\t- {:<36} {}".format(f"leverage of {symbol}", long))
+    print("\t\t\t- {:<36} {}".format(f"leverage of {symbol}", leverage))
 
     # # post market order
     # order_id = exchange.future.trade.post_order(symbol=symbol, side=OrderSide.BUY, order_type=OrderType.MARKET,
