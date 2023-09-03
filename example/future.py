@@ -17,8 +17,8 @@ def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFram
     # get market info
     symbols_info = exchange.future.market.get_symbols_info()
     symbol_info = symbols_info[0]
-    print("\t\t- {:<40}\n\t\t- {} {}".format("Symbols info", "Price precision" + symbol_info.symbol,
-                                             symbol_info.price_precision))
+    print("\t\t- {:<40}".format("Symbols info"))
+    print("\t\t\t- {:<40} {}".format("Price precision " + symbol_info.symbol, symbol_info.price_precision))
 
     # get candles
     candles = exchange.future.market.get_candles(symbol=symbol, time_frame=time_frame)
@@ -37,10 +37,10 @@ def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFram
 def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t- Future Trade")
 
-    # post hedge_mode
-    mode = exchange.future.trade.set_hedge_mode(hedge_mode=HedgeMode.ONE_WAY)
-    print("\t\t- Post Hedge mode")
-    print("\t\t\t- {:<36} {}".format("Mode", mode))
+    # # post hedge_mode
+    # mode = exchange.future.trade.set_hedge_mode(hedge_mode=HedgeMode.ONE_WAY)
+    # print("\t\t- Post Hedge mode")
+    # print("\t\t\t- {:<36} {}".format("Mode", mode))
 
     # get balance
     balance = exchange.future.trade.get_balance()
