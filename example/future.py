@@ -1,7 +1,4 @@
-from datetime import datetime
-
-from pyccx.constant.order_side import OrderSide
-from pyccx.constant.order_type import OrderType
+from pyccx.constant.hedge_mode import HedgeMode
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.exchange import Exchange
 
@@ -10,15 +7,18 @@ def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFram
     print("\t- Future Market")
 
     # get market server time
-    # server_time = exchange.future.market.get_server_time()
-    # print("\t\t- {:<40} {}".format("Server time", server_time))
-    #
-    # # get market ping in milli-seconds
-    # ping = exchange.future.market.get_ping()
-    # print("\t\t- {:<40} {}".format("Ping", ping))
+    server_time = exchange.future.market.get_server_time()
+    print("\t\t- {:<40} {}".format("Server time", server_time))
 
-    # # get market info
-    # symbols_info = exchange.future.market.get_symbols_info()
+    # get market ping in milli-seconds
+    ping = exchange.future.market.get_ping()
+    print("\t\t- {:<40} {}".format("Ping", ping))
+
+    # get market info
+    symbols_info = exchange.future.market.get_symbols_info()
+    symbol_info = symbols_info[0]
+    print("\t\t- {:<40}\n\t\t- {} {}".format("Symbols info", "Price precision" + symbol_info.symbol,
+                                             symbol_info.price_precision))
 
     # get candles
     candles = exchange.future.market.get_candles(symbol=symbol, time_frame=time_frame)
@@ -37,15 +37,15 @@ def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFram
 def future_trade_examples(exchange: Exchange, symbol: str):
     print("\t- Future Trade")
 
-    # # post hedge_mode
-    # mode = exchange.future.trade.post_hedge_mode(hedge_mode=HedgeMode.ONE_WAY)
-    # print("\t\t- Post Hedge mode")
-    # print("\t\t\t- {:<36} {}".format("Mode", mode))
+    # post hedge_mode
+    mode = exchange.future.trade.set_hedge_mode(hedge_mode=HedgeMode.ONE_WAY)
+    print("\t\t- Post Hedge mode")
+    print("\t\t\t- {:<36} {}".format("Mode", mode))
 
     # get balance
-    # balance = exchange.future.trade.get_balance()
-    # print("\t\t- Get balance")
-    # print("\t\t\t- {:<36} {}".format("Available", balance.available))
+    balance = exchange.future.trade.get_balance()
+    print("\t\t- Get balance")
+    print("\t\t\t- {:<36} {}".format("Available", balance.available))
 
     # # get long leverage
     # long = exchange.future.trade.get_leverage(symbol=symbol, side=PositionSide.LONG)
