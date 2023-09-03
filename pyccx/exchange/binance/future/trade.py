@@ -41,7 +41,7 @@ class BinanceFutureTrade(Trade):
         endpoint = "/fapi/v1/leverage"
         params = {"symbol": symbol, "leverage": leverage}
         response = self._https.post(endpoint=endpoint, params=params, sign=True)
-        leverage = response[0]['leverage']
+        leverage = response['leverage']
         return leverage
 
     def get_order(self, order_id: str) -> Order:
