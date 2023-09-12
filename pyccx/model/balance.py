@@ -4,17 +4,17 @@ from typing import Dict
 class Balance:
     def __init__(self):
         self.asset: str = None
+        self.total: float = None
         self.available: float = None
         self.frozen: float = None
-        self.margin: float = None
 
     @staticmethod
     def from_binance(data: Dict):
         instance = Balance()
 
         instance.asset = data['asset']
+        instance.total = round(float(data['balance']), 2)
         instance.available = round(float(data['availableBalance']), 2)
-        instance.frozen = None
 
         return instance
 
