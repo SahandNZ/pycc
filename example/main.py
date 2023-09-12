@@ -21,7 +21,7 @@ def main():
     exchange = Exchange.from_config(data)
 
     # get open orders
-    orders = exchange.future.trade.get_open_orders(symbol=symbol)
+    orders = exchange.future.trade.get_open_orders(symbol=args.symbol)
     print("\t\t- Get open orders")
     print("\t\t\t- {:<32} {}".format("orders count", len(orders)))
 
