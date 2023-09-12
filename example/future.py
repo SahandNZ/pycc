@@ -43,6 +43,7 @@ def future_trade_examples(exchange: Exchange, symbol: str):
     # get balance
     balance = exchange.future.trade.get_balance()
     print("\t\t- Get balance")
+    print("\t\t\t- {:<32} {}".format("Total", balance.total))
     print("\t\t\t- {:<32} {}".format("Available", balance.available))
 
     # get long leverage

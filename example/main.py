@@ -20,7 +20,14 @@ def main():
     data = data[args.exchange]
     exchange = Exchange.from_config(data)
 
+    # get balance
+    balance = exchange.future.trade.get_balance()
+    print("\t\t- Get balance")
+    print("\t\t\t- {:<32} {}".format("Total", balance.total))
+    print("\t\t\t- {:<32} {}".format("Available", balance.available))
+
     # cancel all open orders
+    print("\t\t- Cancel all open orders")
     exchange.future.trade.cancel_all_orders(symbol=args.symbol)
 
     # get open orders
