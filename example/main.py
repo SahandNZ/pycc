@@ -20,6 +20,9 @@ def main():
     data = data[args.exchange]
     exchange = Exchange.from_config(data)
 
+    # cancel all open orders
+    exchange.future.trade.cancel_all_orders(symbol=args.symbol)
+
     # get open orders
     orders = exchange.future.trade.get_open_orders(symbol=args.symbol)
     print("\t\t- Get open orders")
