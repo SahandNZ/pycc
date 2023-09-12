@@ -18,18 +18,19 @@ def run_examples(exchange: Exchange, symbol: str, time_frame: TimeFrame):
     future_examples(exchange, symbol, time_frame)
 
 
-def download_candles(exchange: Exchange, symbols: List[str]):
-    data_collector = DataCollector(exchange=exchange, market=exchange.future.market, data_root='./../data')
-    data_collector.download_symbols_candles(symbols=symbols, time_frame=TimeFrame.MIN1)
+def download_candles(exchange: Exchange, symbols: List[str], time_frame: TimeFrame, data_root: str):
+    data_collector = DataCollector(exchange=exchange, market=exchange.future.market, data_root=data_root)
+    data_collector.download_symbols_candles(symbols=symbols, time_frame=time_frame)
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r', '--run-examples', action='store_true')
-    parser.add_argument('-d', '--download-candles', action='store_true')
-    parser.add_argument('-tf', '--time-frame', action='store', type=int, required=False, default=60)
-    parser.add_argument('-s', '--symbol', action='store', type=str, required=False, default='BTC-USDT')
-    parser.add_argument('-c', '--config-path', action='store', type=str, required=False, default="config.json")
+    parser.add_argument('--run-examples', action='store_true')
+    parser.add_argument('--download-candles', action='store_true')
+    parser.add_argument('--data-root', action='store', type=str, required=True)
+    parser.add_argument('--time-frame', action='store', type=int, required=False, default=60)
+    parser.add_argument('--symbol', action='store', type=str, required=False, default='BTC-USDT')
+    parser.add_argument('--config-path', action='store', type=str, required=False, default="config.json")
     args = parser.parse_args()
 
     with open(args.config_path, 'r') as file:
@@ -39,7 +40,8 @@ def main():
     if args.run_examples:
         run_examples(exchange=exchange, symbol=args.symbol, time_frame=args.time_frame)
     if args.download_candles:
-        download_candles(exchange=exchange, symbols=config_data['symbols'])
+        symbols = config_data['symbols']
+        download_candles(exchange=exchange, symbols=symbols, time_frame=args.time_frame, data_root=args.data_root)
 
 
 if __name__ == '__main__':
