@@ -1,4 +1,7 @@
+# Project
 **/data/
+*.json
+*.log
 
 # Python environments
 **/venv/
@@ -7,4 +10,5 @@
 **/.idea/
 **/__pycache__/
 
+# Python packages
 **/dist
