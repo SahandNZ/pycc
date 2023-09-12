@@ -3,7 +3,7 @@ from typing import Dict
 from pyccx.interface.future import Future
 from pyccx.interface.spot import Spot
 from pyccx.interface.wallet import Wallet
-from pyccx.utils.utils import import_class
+from pyccx.utils import import_class
 
 
 class Exchange:
