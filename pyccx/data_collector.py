@@ -13,7 +13,7 @@ from pyccx.utils import create_directory
 
 
 class DataCollector:
-    def __init__(self, exchange: Exchange, market: Market, data_root: str, candles_count: int = 100000):
+    def __init__(self, exchange: Exchange, market: Market, data_root: str, candles_count: int = None):
         self.__exchange: Exchange = exchange
         self.__market: Market = market
         self.__data_root: str = data_root
