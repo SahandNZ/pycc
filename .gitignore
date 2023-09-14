@@ -1,7 +1,5 @@
 # Project
-**/data/
 *.json
-*.log
 
 # Python environments
 **/venv/
