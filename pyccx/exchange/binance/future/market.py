@@ -39,8 +39,14 @@ class BinanceFutureMarket(Market):
         return symbols_info
 
     @symbol_decorator
+    def get_symbol_info(self, symbol: str) -> SymbolInfo:
+        symbols_info = self.get_symbols_info()
+        symbol_info = [item for item in symbols_info if item.symbol == symbol][0]
+        return symbol_info
+
+    @symbol_decorator
     @time_frame_decorator
-    def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
+    def get_recent_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
         endpoint = '/fapi/v1/klines'
         params = {'symbol': symbol, 'interval': time_frame}
         response = self._https.get(endpoint=endpoint, params=params)

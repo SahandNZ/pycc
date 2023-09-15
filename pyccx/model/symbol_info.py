@@ -6,6 +6,7 @@ class SymbolInfo:
         self.symbol: str = None
         self.base_asset: str = None
         self.quote_asset: str = None
+        self.on_board_timestamp: int = None
         self.price_precision: int = None
         self.price_step: int = None
         self.volume_precision: int = None
@@ -18,6 +19,7 @@ class SymbolInfo:
         instance.symbol = data['symbol']
         instance.base_asset = data['baseAsset']
         instance.quote_asset = data['quoteAsset']
+        instance.on_board_timestamp = int(data['onboardDate']) // 1000
         instance.price_precision = int(data['pricePrecision'])
         instance.volume_precision = int(data['quantityPrecision'])
 
