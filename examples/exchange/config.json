@@ -1,0 +1,26 @@
+{
+    "pyccx": {
+        "exchange": "binance"
+    },
+    "symbols": [
+        "BTC-USDT",
+        "ETH-USDT",
+        "BCH-USDT",
+        "XRP-USDT",
+        "EOS-USDT",
+        "LTC-USDT",
+        "TRX-USDT",
+        "ETC-USDT",
+        "LINK-USDT",
+        "XLM-USDT",
+        "ADA-USDT",
+        "XMR-USDT",
+        "BNB-USDT",
+        "THETA-USDT",
+        "KNC-USDT",
+        "DOGE-USDT",
+        "WAVES-USDT",
+        "DEFI-USDT",
+        "YFI-USDT"
+    ]
+}

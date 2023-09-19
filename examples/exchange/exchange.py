@@ -23,46 +23,10 @@ def run_examples(exchange: Exchange, symbol: str, time_frame: TimeFrame):
     spot_examples(exchange, symbol, time_frame)
     future_examples(exchange, symbol, time_frame)
 
-
-def download_candles(exchange: Exchange, symbols: List[str], time_frame: TimeFrame):
-    local_data = LocalData(exchange=exchange)
-    local_data.download_symbols_candles(symbols=symbols, time_frame=time_frame)
-
-
-def close_position(exchange: Exchange, symbol: str):
-    # get position to close position
-    position = exchange.future.trade.get_open_position(symbol=symbol)
-    print("\t\t- Get position")
-    print("\t\t\t- {:<32} {}".format("symbol", position.symbol))
-    print("\t\t\t- {:<32} {}".format("side", position.side))
-    print("\t\t\t- {:<32} {}".format("volume", position.volume))
-    print("\t\t\t- {:<32} {}".format("Leverage", position.leverage))
-    print("\t\t\t- {:<32} {}".format("Entry price", position.entry_price))
-    print("\t\t\t- {:<32} {}".format("Liquidation price", position.liquidation_price))
-
-    # post market order to close current position
-    reverse_side = -1 * position.side
-    order_id = exchange.future.trade.set_market_order(symbol=symbol, side=reverse_side, volume=position.volume)
-    print("\t\t- Post Market order")
-    print("\t\t\t- {:<32} {}".format("Buy market order", order_id))
-
-    # get position to check is position closed
-    position = exchange.future.trade.get_open_position(symbol=symbol)
-    print("\t\t- Get position")
-    print("\t\t\t- {:<32} {}".format("symbol", position.symbol))
-    print("\t\t\t- {:<32} {}".format("side", position.side))
-    print("\t\t\t- {:<32} {}".format("volume", position.volume))
-    print("\t\t\t- {:<32} {}".format("Leverage", position.leverage))
-    print("\t\t\t- {:<32} {}".format("Entry price", position.entry_price))
-    print("\t\t\t- {:<32} {}".format("Liquidation price", position.liquidation_price))
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--print-ping', action='store_true')
     parser.add_argument('--run-examples', action='store_true')
-    parser.add_argument('--download-candles', action='store_true')
-    parser.add_argument('--close-positions', action='store_true')
     parser.add_argument('--data-root', action='store', type=str, required=False)
     parser.add_argument('--time-frame', action='store', type=int, required=False, default=60)
     parser.add_argument('--symbol', action='store', type=str, required=False, default='BTC-USDT')

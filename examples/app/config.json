@@ -1,0 +1,7 @@
+{
+    "pyccx": {
+        "exchange": "binance",
+        "symbol": "BTC-USDT",
+        "time-frame": 3600
+    }
+}
