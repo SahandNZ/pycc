@@ -14,7 +14,7 @@ from pyccx.interface.exchange import Exchange
 
 def print_ping(exchange: Exchange):
     ping = exchange.future.market.get_ping()
-    print("\t\t- {:<40} {}ms".format("Ping to {}".format(exchange.name), ping))
+    print("\t\t- {:<40} {}ms".format("Ping to {}".format(exchange.exchange), ping))
 
 
 def run_examples(exchange: Exchange, symbol: str, time_frame: TimeFrame):
@@ -74,7 +74,7 @@ def main():
 
     with open(args.config_path, 'r') as file:
         config_data = json.load(file)
-    exchange = Exchange.from_config(config_data['exchange'])
+    exchange = Exchange.from_config(config_data['pyccx'])
 
     if args.print_ping:
         print_ping(exchange)
