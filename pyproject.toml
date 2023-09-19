@@ -19,5 +19,6 @@ classifiers = [
 dependencies = [
     "tqdm",
     "pandas",
-    "requests"
+    "requests",
+    "apscheduler"
 ]
