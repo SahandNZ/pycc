@@ -26,7 +26,7 @@ class LocalData:
         return self.__data_root or os.environ.get('DATA_ROOT') or '~/data/'
 
     def _local_candles_path(self, symbol: str, time_frame: str) -> str:
-        root = os.path.join(self.data_root, self.exchange.name, symbol)
+        root = os.path.join(self.data_root, self.exchange.exchange, symbol)
         if not os.path.exists(root):
             create_directory(root)
         return os.path.join(root, f"{time_frame}.csv")
