@@ -1,5 +1,6 @@
+import itertools
 from datetime import datetime
-from typing import List
+from typing import List, Dict, Tuple
 
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.data.local_data import LocalData
@@ -9,14 +10,17 @@ from pyccx.model.candle import Candle
 
 
 class LiveData:
-    def __init__(self, exchange: Exchange, symbol: str, time_frame: TimeFrame):
+    def __init__(self, exchange: Exchange, symbols: str, time_frames: TimeFrame):
         self.__exchange: Exchange = exchange
-        self.__symbol: str = symbol
-        self.__time_frame: TimeFrame = time_frame
+        self.__symbols: List[str] = symbols
+        self.__time_frames: List[TimeFrame] = time_frames
+        self.__pairs: List[Tuple[str, TimeFrame]] = list(itertools.product(self.symbols, self.time_frames))
 
         self.__local_data: LocalData = LocalData(exchange=exchange)
-        self.__local_candles: List[Candle] = self.__local_data.download_candles(symbol=symbol, time_frame=time_frame)
-        self.__live_candles: List[Candle] = None
+        self.__local_candles_dict: Dict[Tuple[str, TimeFrame], List[Candle]] = {}
+        self.__live_candles_dict: Dict[Tuple[str, TimeFrame], List[Candle]] = {}
+
+        self._update_local_candles()
 
     @property
     def exchange(self) -> Exchange:
@@ -27,33 +31,49 @@ class LiveData:
         return self.exchange.future.market
 
     @property
-    def symbol(self) -> str:
-        return self.__symbol
+    def symbols(self) -> List[str]:
+        return self.__symbols
 
     @property
-    def time_frame(self) -> TimeFrame:
-        return self.__time_frame
+    def time_frames(self) -> TimeFrame:
+        return self.__time_frames
 
     @property
-    def local_candles(self) -> List[Candle]:
-        return self.__local_candles
+    def pairs(self) -> List[Tuple[str, TimeFrame]]:
+        return self.__pairs
 
-    @property
-    def candles(self) -> List[Candle]:
-        return self.__live_candles
+    def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
+        return self.__live_candles_dict[(symbol, time_frame)]
 
-    @property
-    def need_update(self) -> bool:
-        current_open_timestamp = datetime.now().timestamp() // self.time_frame * self.time_frame
-        return self.candles is None or self.candles[-1].timestamp < current_open_timestamp
+    def _update_local_candles(self):
+        for symbol, time_frame in self.pairs:
+            if (symbol, time_frame) not in self.__local_candles_dict:
+                local_candle = self.__local_data.get_candles(symbol, time_frame)
+                self.__local_candles_dict[(symbol, time_frame)] = local_candle
+            else:
+                local_candle = self.__local_candles_dict[(symbol, time_frame)]
+                current_timestamp = datetime.now().timestamp()
+                update_timestamp = local_candle[-1].timestamp + time_frame * self.market.max_candles
+                if update_timestamp < current_timestamp:
+                    local_candle = self.__local_data.get_candles(symbol, time_frame)
+                    self.__local_candles_dict[(symbol, time_frame)] = local_candle
 
-    def update(self) -> None:
-        start_timestamp = self.local_candles[-1].timestamp + self.time_frame
-        new_candles = self.market.get_candles(start_timestamp=start_timestamp, symbol=self.symbol,
-                                              time_frame=self.time_frame)
-        self.__local_candles = self.local_candles + new_candles[:-1]
-        self.__live_candles = self.local_candles + new_candles
+    def _update_live_candles(self):
+        for symbol, time_frame in self.pairs:
+            if (symbol, time_frame) not in self.__live_candles_dict:
+                local_candles = self.__local_candles_dict[(symbol, time_frame)]
+                self.__live_candles_dict[(symbol, time_frame)] = local_candles
+
+            local_candles = self.__local_candles_dict[(symbol, time_frame)]
+            live_candles = self.__live_candles_dict[(symbol, time_frame)]
+
+            last_live_candle_timestamp = live_candles[-1].timestamp
+            current_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
+            if last_live_candle_timestamp < current_open_timestamp:
+                new_candles = self.market.get_candles(symbol, time_frame, current_open_timestamp)
+                updated_live_candles = local_candles + new_candles
+                self.__live_candles_dict[(symbol, time_frame)] = updated_live_candles
 
     def refresh(self) -> None:
-        if self.need_update:
-            self.update()
+        self._update_local_candles()
+        self._update_live_candles()
