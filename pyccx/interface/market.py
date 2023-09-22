@@ -3,13 +3,12 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import List
 
-from tqdm import tqdm
-
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.ws import WsClient
 from pyccx.model.candle import Candle
 from pyccx.model.symbol_info import SymbolInfo
+from tqdm import tqdm
 
 
 class Market(ABC):
@@ -72,7 +71,8 @@ class Market(ABC):
             if stop_timestamp < req_stop:
                 req_stop = stop_timestamp
 
-            req_candles = self.get_historical_candles(symbol, time_frame, req_start, req_stop)
+            req_candles = self.get_historical_candles(symbol=symbol, time_frame=time_frame, start_timestamp=req_start,
+                                                      stop_timestamp=req_stop)
             candles.extend(req_candles)
 
         return candles
