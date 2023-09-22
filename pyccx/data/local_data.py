@@ -36,15 +36,26 @@ class LocalData:
         local_candles = Candle.from_csv(path) if os.path.exists(path) else []
         return local_candles
 
-    # TODO
-    def _refine_candles(self, symbol: str, time_frame: TimeFrame, candles: List[Candle]) -> List[Candle]:
+    def _refine_candles(self, symbol: str, time_frame: TimeFrame, candles: List[Candle], index: int) -> List[Candle]:
+        start_timestamp = candles[index - 1].timestamp + time_frame
+        stop_timestamp = candles[index].timestamp
+        leftover_candles = self.market.get_candles(symbol, time_frame, start_timestamp, stop_timestamp=stop_timestamp)
+
+        corrected_candles = candles[:index] + leftover_candles + candles[index:]
+        return self._check_candles(symbol, time_frame, corrected_candles)
+
+    def _check_candles(self, symbol: str, time_frame: TimeFrame, candles: List[Candle]) -> List[Candle]:
+        for index in range(1, len(candles)):
+            if candles[index - 1].timestamp + time_frame != candles[index].timestamp:
+                return self._refine_candles(symbol, time_frame, candles, index)
+
         return candles
 
     def _save_candles(self, symbol: str, time_frame: TimeFrame, candles: List[Candle], mode: str = 'w+'):
         path = self._local_candles_path(symbol=symbol, time_frame=time_frame)
         Candle.to_csv(candles=candles, path=path, mode=mode)
 
-    def download_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
+    def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
         local_candles = self._load_candles(symbol=symbol, time_frame=time_frame)
 
         if 0 == len(local_candles):
@@ -53,15 +64,14 @@ class LocalData:
         else:
             start_timestamp = local_candles[-1].timestamp + time_frame
 
-        new_candles = self.market.get_candles(start_timestamp=start_timestamp, symbol=symbol, time_frame=time_frame,
-                                              show_tqdm=True)
+        new_candles = self.market.get_candles(symbol, time_frame, start_timestamp, show_tqdm=True)
 
-        updated_candles = local_candles + new_candles
-        updated_candles = self._refine_candles(symbol=symbol, time_frame=time_frame, candles=updated_candles)
-        self._save_candles(symbol=symbol, time_frame=time_frame, candles=updated_candles[:-1])
+        updated_candles = local_candles + new_candles[:-1]
+        corrected_candles = self._check_candles(symbol=symbol, time_frame=time_frame, candles=updated_candles)
+        self._save_candles(symbol=symbol, time_frame=time_frame, candles=corrected_candles)
 
-        return updated_candles
+        return corrected_candles
 
     def download_symbols_candles(self, symbols: List[str], time_frame: TimeFrame):
         for symbol in symbols:
-            self.download_candles(symbol=symbol, time_frame=time_frame)
+            self.get_candles(symbol=symbol, time_frame=time_frame)
