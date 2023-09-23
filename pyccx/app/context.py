@@ -7,12 +7,13 @@ from pyccx.interface.exchange import Exchange
 
 
 class Context:
-    def __init__(self, exchange: Exchange, symbols: List[str], time_frames: List[TimeFrame]):
+    def __init__(self, exchange: Exchange, symbols: List[str], time_frames: List[TimeFrame], candles_count: int = None):
         self.__exchange: Exchange = exchange
         self.__symbols: str = symbols
         self.__time_frames: TimeFrame = time_frames
         self.__pairs: List[Tuple[str, TimeFrame]] = list(itertools.product(self.symbols, self.time_frames))
-        self.__live_data: LiveData = LiveData(exchange=exchange, symbols=symbols, time_frames=time_frames)
+        self.__live_data: LiveData = LiveData(exchange=exchange, symbols=symbols, time_frames=time_frames,
+                                              candles_count=candles_count)
 
     @property
     def exchange(self) -> Exchange:

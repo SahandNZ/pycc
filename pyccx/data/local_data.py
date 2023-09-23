@@ -1,5 +1,6 @@
 import os
 from typing import List
+from datetime import datetime
 
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.exchange import Exchange
@@ -9,9 +10,10 @@ from pyccx.utils import create_directory
 
 
 class LocalData:
-    def __init__(self, exchange: Exchange, data_root: str = None):
+    def __init__(self, exchange: Exchange, data_root: str = None, candles_count: int = None):
         self.__exchange: Exchange = exchange
         self.__data_root: str = data_root
+        self.__candles_count: int = candles_count
 
     @property
     def exchange(self) -> Exchange:
@@ -24,6 +26,10 @@ class LocalData:
     @property
     def data_root(self) -> str:
         return self.__data_root or os.environ.get('DATA_ROOT')
+
+    @property
+    def candles_count(self) -> int:
+        return self.__candles_count
 
     def _local_candles_path(self, symbol: str, time_frame: str) -> str:
         root = os.path.join(self.data_root, 'candle', self.exchange.exchange, symbol)
@@ -59,8 +65,12 @@ class LocalData:
         local_candles = self._load_candles(symbol=symbol, time_frame=time_frame)
 
         if 0 == len(local_candles):
-            symbol_info = self.market.get_symbol_info(symbol=symbol)
-            start_timestamp = symbol_info.on_board_timestamp
+            if self.candles_count is None:
+                symbol_info = self.market.get_symbol_info(symbol=symbol)
+                start_timestamp = symbol_info.on_board_timestamp
+            else:
+                currnet_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
+                start_timestamp = currnet_open_timestamp - self.candles_count * time_frame
         else:
             start_timestamp = local_candles[-1].timestamp + time_frame
 
