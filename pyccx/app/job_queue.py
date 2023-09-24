@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Callable, List
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-
 from pyccx.app.context import Context
 from pyccx.app.job import Job
 
@@ -48,6 +47,7 @@ class JobQueue:
         job = Job(callback=callback)
         job.aps_job = self.scheduler.add_job(
             func=job.run,
+            name=job.name,
             args=(self.__context, args),
         )
 
@@ -60,6 +60,7 @@ class JobQueue:
         job = Job(callback=callback)
         job.aps_job = self.scheduler.add_job(
             func=job.run,
+            name=job.name,
             trigger="interval",
             args=(self.__context, args),
             start_date=start_date,
