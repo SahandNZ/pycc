@@ -53,7 +53,8 @@ class JobQueue:
 
         return job
 
-    def run_repeating(self, callback: Callable, interval: int, args: List = None, when: str = 'any') -> Job:
+    def run_repeating(self, callback: Callable, interval: int, args: List = None, when: str = 'any',
+                      misfire_grace_time: int = None) -> Job:
         args = self._cast_args(args)
         start_date = self._cast_when(interval=interval, when=when)
 
@@ -61,10 +62,11 @@ class JobQueue:
         job.aps_job = self.scheduler.add_job(
             func=job.run,
             name=job.name,
-            trigger="interval",
-            args=(self.__context, args),
-            start_date=start_date,
             seconds=interval,
+            trigger="interval",
+            start_date=start_date,
+            args=(self.__context, args),
+            misfire_grace_time=misfire_grace_time
         )
 
         return job
