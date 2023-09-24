@@ -69,8 +69,8 @@ class LocalData:
                 symbol_info = self.market.get_symbol_info(symbol=symbol)
                 start_timestamp = symbol_info.on_board_timestamp
             else:
-                currnet_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
-                start_timestamp = currnet_open_timestamp - self.candles_count * time_frame
+                current_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
+                start_timestamp = current_open_timestamp - self.candles_count * time_frame
         else:
             start_timestamp = local_candles[-1].timestamp + time_frame
 
