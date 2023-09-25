@@ -19,8 +19,11 @@ class Application:
     def from_config(config_dict: Dict):
         exchange = Exchange.from_config(config_dict)
 
-        dct = {'exchange': exchange, 'symbols': config_dict['symbols'], 'time_frames': config_dict['time-frames'],
-               'candles_count': config_dict['candles-count']}
+        dct = {'exchange': exchange, 'symbols': config_dict['symbols'], 'time_frames': config_dict['time-frames']}
+        if 'candles_count' in config_dict:
+            dct['candles_count'] = config_dict['candles-count']
+        if 'delay' in config_dict:
+            dct['delay'] = config_dict['delay']
         app = call_with_dict(Application, dct)
 
         return app
