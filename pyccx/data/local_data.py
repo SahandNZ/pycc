@@ -64,19 +64,19 @@ class LocalData:
     def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
         local_candles = self._load_candles(symbol=symbol, time_frame=time_frame)
 
+        # assign value to start timestamp
         if 0 == len(local_candles):
-            show_tqdm = True
             if self.candles_count is None:
                 symbol_info = self.market.get_symbol_info(symbol=symbol)
                 start_timestamp = symbol_info.on_board_timestamp
             else:
                 current_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
                 start_timestamp = current_open_timestamp - self.candles_count * time_frame
-
         else:
             start_timestamp = local_candles[-1].timestamp + time_frame
-            show_tqdm = False
 
+        # show tqdm if more than one request be sent
+        show_tqdm = self.market.max_candles < (datetime.now().timestamp() - start_timestamp) // time_frame
         new_candles = self.market.get_candles(symbol, time_frame, start_timestamp, show_tqdm=show_tqdm)
 
         updated_candles = local_candles + new_candles[:-1]

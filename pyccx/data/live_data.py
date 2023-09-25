@@ -70,7 +70,8 @@ class LiveData:
             last_live_candle_timestamp = live_candles[-1].timestamp
             current_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
             if last_live_candle_timestamp < current_open_timestamp:
-                new_candles = self.market.get_candles(symbol, time_frame, current_open_timestamp)
+                start_timestamp = local_candles[-1].timestamp + time_frame
+                new_candles = self.market.get_candles(symbol, time_frame, start_timestamp)
                 updated_live_candles = local_candles + new_candles
                 self.__live_candles_dict[(symbol, time_frame)] = updated_live_candles
 

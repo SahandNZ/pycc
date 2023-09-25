@@ -7,11 +7,14 @@ from pyccx.app.context import Context
 from pyccx.constant.time_frame import TimeFrame
 
 
-async def one_time_callback(context: Context):
+async def callback(context: Context):
     for symbol, time_frame in context.pairs:
         candles = context.live_data.get_candles(symbol, time_frame)
-        print("{:<20} {:<20} {:<20} {:<20}".format(symbol, time_frame, str(candles[-1].datetime), candles[-1].open))
-    print()
+        print("{:<20} {:<20} {:<20} {:<20}".format(symbol, time_frame, str(candles[-3].datetime), candles[-3].close))
+        print("{:<20} {:<20} {:<20} {:<20}".format(symbol, time_frame, str(candles[-2].datetime), candles[-2].close))
+        print("{:<20} {:<20} {:<20} {:<20}".format(symbol, time_frame, str(candles[-1].datetime), candles[-1].close))
+        print()
+    print("=" * 100)
 
 
 def main():
@@ -29,7 +32,8 @@ def main():
         config_data = json.load(file)
 
     app = Application.from_config(config_data['pyccx'])
-    app.job_queue.run_repeating(callback=one_time_callback, interval=5, when='open')
+    app.job_queue.run_once(callback=callback)
+    app.job_queue.run_repeating(callback=callback, interval=60, when='open', misfire_grace_time=30)
     app.run()
 
 

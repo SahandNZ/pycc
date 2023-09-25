@@ -6,8 +6,11 @@
             "ETH-USDT"
         ],
         "time-frames": [
+            60,
             3600,
             86400
-        ]
+        ],
+        "candles-count": 15000,
+        "delay": 1
     }
 }
