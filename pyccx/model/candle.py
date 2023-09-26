@@ -70,8 +70,8 @@ class Candle:
         data = [candle.to_list() for candle in candles]
         columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume', 'trade']
         df = pd.DataFrame(data=data, columns=columns)
-        df['datetime'] = [datetime.fromtimestamp(timestamp) for timestamp in df.timestamp]
-        df.set_index('timestamp')
+        df.insert(0, 'datetime', [datetime.fromtimestamp(timestamp) for timestamp in df.timestamp])
+        df = df.set_index('timestamp')
 
         return df
 
