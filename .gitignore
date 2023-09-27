@@ -10,3 +10,6 @@
 
 # Python packages
 **/dist
+
+# jupyter lab
+**/.ipynb_checkpoints/
