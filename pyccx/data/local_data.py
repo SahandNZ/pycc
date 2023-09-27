@@ -25,7 +25,7 @@ class LocalData:
 
     @property
     def data_root(self) -> str:
-        return self.__data_root or os.environ.get('DATA_ROOT')
+        return self.__data_root or os.environ.get('DATA_ROOT') or './data/'
 
     @property
     def candles_count(self) -> int:
