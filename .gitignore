@@ -1,7 +1,8 @@
 # Project
-**/data/candle
+**/data
 
 # Python environments
+**/env/
 **/venv/
 
 # Pycharm
