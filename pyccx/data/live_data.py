@@ -10,13 +10,14 @@ from pyccx.model.candle import Candle
 
 
 class LiveData:
-    def __init__(self, exchange: Exchange, symbols: str, time_frames: TimeFrame, candles_count: int = None):
+    def __init__(self, exchange: Exchange, symbols: str, time_frames: TimeFrame, data_root: str = None,
+                 candles_count: int = None):
         self.__exchange: Exchange = exchange
         self.__symbols: List[str] = symbols
         self.__time_frames: List[TimeFrame] = time_frames
         self.__pairs: List[Tuple[str, TimeFrame]] = list(itertools.product(self.symbols, self.time_frames))
 
-        self.__local_data: LocalData = LocalData(exchange=exchange, candles_count=candles_count)
+        self.__local_data: LocalData = LocalData(exchange=exchange, data_root=data_root, candles_count=candles_count)
         self.__local_candles_dict: Dict[Tuple[str, TimeFrame], List[Candle]] = {}
         self.__live_candles_dict: Dict[Tuple[str, TimeFrame], List[Candle]] = {}
 
