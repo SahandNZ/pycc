@@ -1,6 +1,7 @@
 {
     "pyccx": {
         "exchange": "binance",
+        "proxies": {},
         "symbols": [
             "BTC-USDT",
             "ETH-USDT"
