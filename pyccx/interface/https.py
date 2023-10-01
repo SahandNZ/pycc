@@ -7,10 +7,11 @@ from requests import Response
 
 
 class HttpsClient(ABC):
-    def __init__(self, base_url: str, key: str, secret_key: str):
+    def __init__(self, base_url: str, key: str, secret_key: str, proxies: Dict[str, str]):
         self._base_url: str = base_url
         self._key: str = key
         self._secret_key: str = secret_key
+        self._proxies = proxies if proxies else {}
 
     @abstractmethod
     def sign(self, method: str, endpoint: str, params: Dict, timestamp: int) -> str:
@@ -27,7 +28,8 @@ class HttpsClient(ABC):
     def __request(self, method: str, endpoint: str, params: Dict, sign: bool):
         url = parse.urljoin(self._base_url, endpoint)
         headers, params, body = self.prepare(method, endpoint, params, sign)
-        response = requests.request(method=method, url=url, headers=headers, params=params, **body)
+        response = requests.request(method=method, url=url, headers=headers, params=params, proxies=self._proxies,
+                                    **body)
         data = self.parse(response)
         return data
 

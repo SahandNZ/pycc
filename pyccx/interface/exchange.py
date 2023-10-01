@@ -1,12 +1,14 @@
+from typing import Dict
+
 from pyccx.interface.future import Future
 from pyccx.interface.spot import Spot
 from pyccx.interface.wallet import Wallet
 from pyccx.utils import import_class, call_with_dict
-from typing import Dict
 
 
 class Exchange:
-    def __init__(self, exchange: str, api_key: str = None, secret_key: str = None, passphrase: str = None):
+    def __init__(self, exchange: str, api_key: str = None, secret_key: str = None, passphrase: str = None,
+                 proxies: Dict[str, str] = None):
         self.__exchange: str = exchange
 
         # import classes
@@ -16,7 +18,7 @@ class Exchange:
         trade_cls = import_class(module=f"pyccx.exchange.{exchange}.future.trade")
 
         # create protocol instances
-        params = {"api_key": api_key, "secret_key": secret_key, "passphrase": passphrase}
+        params = {"api_key": api_key, "secret_key": secret_key, "passphrase": passphrase, "proxies": proxies}
         https = call_with_dict(https_cls, params)
         ws = call_with_dict(ws_cls, params)
 

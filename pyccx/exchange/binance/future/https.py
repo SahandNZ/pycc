@@ -5,14 +5,15 @@ from datetime import datetime
 from typing import Dict, Tuple
 from urllib import parse
 
+from requests import Response
+
 from pyccx.exchange.binance.future.exception import BinanceFutureHttpsException
 from pyccx.interface.https import HttpsClient
-from requests import Response
 
 
 class BinanceFutureHttpsClient(HttpsClient):
-    def __init__(self, key: str = None, secret_key: str = None):
-        super().__init__(base_url='https://fapi.binance.com', key=key, secret_key=secret_key)
+    def __init__(self, key: str = None, secret_key: str = None, proxies: Dict[str, str] = None):
+        super().__init__(base_url='https://fapi.binance.com', key=key, secret_key=secret_key, proxies=proxies)
 
     def sign(self, method: str, endpoint: str, params: Dict, request_time: int) -> str:
         to_sign = parse.urlencode(params)
