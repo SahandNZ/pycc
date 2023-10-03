@@ -31,6 +31,7 @@ class BinanceFutureMarket(Market):
         ping = round(server - local)
         return ping
 
+    @symbol_decorator
     def get_symbols_info(self) -> List[SymbolInfo]:
         endpoint = '/fapi/v1/exchangeInfo'
         response = self._https.get(endpoint=endpoint)
@@ -38,7 +39,6 @@ class BinanceFutureMarket(Market):
         symbols_info = [SymbolInfo.from_binance(item) for item in perpetuals]
         return symbols_info
 
-    @symbol_decorator
     def get_symbol_info(self, symbol: str) -> SymbolInfo:
         symbols_info = self.get_symbols_info()
         symbol_info = [item for item in symbols_info if item.symbol == symbol][0]
