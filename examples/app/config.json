@@ -1,7 +1,10 @@
 {
     "pyccx": {
         "exchange": "binance",
-        "proxies": {},
+        "proxies": {
+            "http": "http://finbright:Finbright_Proxy_Squid@20.46.193.9:3128",
+            "https": "http://finbright:Finbright_Proxy_Squid@20.46.193.9:3128"
+        },
         "symbols": [
             "BTC-USDT",
             "ETH-USDT"

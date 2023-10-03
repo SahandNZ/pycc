@@ -2,13 +2,11 @@ import argparse
 import json
 import os
 import sys
-from typing import List
 
-from examples.future import future_examples
-from examples.spot import spot_examples
-from examples.wallet import wallet_examples
+from examples.exchange.future import future_examples
+from examples.exchange.spot import spot_examples
+from examples.exchange.wallet import wallet_examples
 from pyccx.constant.time_frame import TimeFrame
-from pyccx.data.local_data import LocalData
 from pyccx.interface.exchange import Exchange
 
 
@@ -23,6 +21,7 @@ def run_examples(exchange: Exchange, symbol: str, time_frame: TimeFrame):
     spot_examples(exchange, symbol, time_frame)
     future_examples(exchange, symbol, time_frame)
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--print-ping', action='store_true')
@@ -30,8 +29,10 @@ def main():
     parser.add_argument('--data-root', action='store', type=str, required=False)
     parser.add_argument('--time-frame', action='store', type=int, required=False, default=60)
     parser.add_argument('--symbol', action='store', type=str, required=False, default='BTC-USDT')
-    parser.add_argument('--config-path', action='store', type=str, required=False, default="config.json")
+    parser.add_argument('--config-path', action='store', type=str, required=False, default="./config.json")
     args = parser.parse_args()
+
+    print(os.path.curdir)
 
     if args.data_root is not None:
         os.environ['DATA_ROOT'] = args.data_root
@@ -44,11 +45,6 @@ def main():
         print_ping(exchange)
     if args.run_examples:
         run_examples(exchange=exchange, symbol=args.symbol, time_frame=args.time_frame)
-    if args.download_candles:
-        symbols = config_data['symbols']
-        download_candles(exchange=exchange, symbols=symbols, time_frame=args.time_frame)
-    if args.close_positions:
-        close_position(exchange=exchange, symbol=args.symbol)
 
 
 if __name__ == '__main__':

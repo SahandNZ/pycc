@@ -18,13 +18,12 @@ def future_market_examples(exchange: Exchange, symbol: str, time_frame: TimeFram
     print("\t\t- {:<40} {}".format("Ping", ping))
 
     # get market info
-    symbols_info = exchange.future.market.get_symbols_info()
-    symbol_info = symbols_info[0]
+    symbol_info = exchange.future.market.get_symbol_info(symbol=symbol)
     print("\t\t- {:<40}".format("Symbols info"))
     print("\t\t\t- {:<32} {}".format(symbol_info.symbol + " Price precision", symbol_info.price_precision))
 
     # get candles
-    candles = exchange.future.market.get_candles(symbol=symbol, time_frame=time_frame)
+    candles = exchange.future.market.get_recent_candles(symbol=symbol, time_frame=time_frame)
     print("\t\t- {:<40} {}".format("Last candle open price", candles[-1].open))
 
     # # get historical candles
