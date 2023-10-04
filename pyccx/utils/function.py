@@ -1,13 +1,6 @@
 import importlib
 import inspect
-import os
-import pathlib
 from typing import Dict, Callable
-
-
-def create_directory(path: str) -> bool:
-    if not os.path.exists(path):
-        pathlib.Path(path).mkdir(parents=True, exist_ok=True)
 
 
 def import_class(module: str):
