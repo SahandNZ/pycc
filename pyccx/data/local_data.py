@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from typing import List
+from typing import List, Dict
 
 import pandas as pd
 
@@ -63,7 +63,7 @@ class LocalData:
         path = self._local_candles_path(symbol=symbol, time_frame=time_frame)
         Candle.to_csv(candles=candles, path=path, mode=mode)
 
-    def download_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
+    def download_candles(self, symbol: str, time_frame: TimeFrame, update: bool = True) -> List[Candle]:
         local_candles = self._load_candles(symbol=symbol, time_frame=time_frame)
 
         # assign value to start timestamp
@@ -75,28 +75,32 @@ class LocalData:
                 current_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
                 start_timestamp = current_open_timestamp - self.candles_count * time_frame
         else:
-            start_timestamp = local_candles[-1].timestamp + time_frame
+            start_timestamp = local_candles[-1].timestamp + time_frame if update else None
 
-        # show tqdm if more than one request be sent
-        show_tqdm = self.market.max_candles < (datetime.now().timestamp() - start_timestamp) // time_frame
-        new_candles = self.market.get_candles(symbol, time_frame, start_timestamp, show_tqdm=show_tqdm)
+        if start_timestamp is not None:
+            # show tqdm if more than one request be sent
+            show_tqdm = self.market.max_candles < (datetime.now().timestamp() - start_timestamp) // time_frame
+            new_candles = self.market.get_candles(symbol, time_frame, start_timestamp, show_tqdm=show_tqdm)
 
-        updated_candles = local_candles + new_candles[:-1]
-        corrected_candles = self._check_candles(symbol=symbol, time_frame=time_frame, candles=updated_candles)
-        self._save_candles(symbol=symbol, time_frame=time_frame, candles=corrected_candles)
+            updated_candles = local_candles + new_candles[:-1]
+            corrected_candles = self._check_candles(symbol=symbol, time_frame=time_frame, candles=updated_candles)
+            self._save_candles(symbol=symbol, time_frame=time_frame, candles=corrected_candles)
 
-        return corrected_candles
+            local_candles = corrected_candles
+
+        return local_candles
 
     def download_symbols_candles(self, symbols: List[str], time_frame: TimeFrame):
         for symbol in symbols:
             self.download_candles(symbol=symbol, time_frame=time_frame)
 
 
-def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame) -> pd.DataFrame:
-    ex = Exchange(exchange=exchange)
-    local_data = LocalData(exchange=ex)
+def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame, update: bool = False,
+                   proxies: Dict[str, str] = None) -> pd.DataFrame:
+    exchange_ = Exchange(exchange=exchange, proxies=proxies)
+    local_data = LocalData(exchange=exchange_)
 
-    one_min_candles = local_data.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1)
+    one_min_candles = local_data.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1, update=update)
     one_min_df = Candle.to_data_frame(candles=one_min_candles)
     df = resample_time_frame(tohlcv=one_min_df, source_timeframe=TimeFrame.MIN1, destination_timeframe=time_frame)
 
