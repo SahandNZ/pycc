@@ -49,14 +49,14 @@ class LiveData:
     def _update_local_candles(self):
         for symbol, time_frame in self.pairs:
             if (symbol, time_frame) not in self.__local_candles_dict:
-                local_candle = self.__local_data.get_candles(symbol, time_frame)
+                local_candle = self.__local_data.download_candles(symbol, time_frame)
                 self.__local_candles_dict[(symbol, time_frame)] = local_candle
             else:
                 local_candle = self.__local_candles_dict[(symbol, time_frame)]
                 current_timestamp = datetime.now().timestamp()
                 update_timestamp = local_candle[-1].timestamp + time_frame * self.market.max_candles
                 if update_timestamp < current_timestamp:
-                    local_candle = self.__local_data.get_candles(symbol, time_frame)
+                    local_candle = self.__local_data.download_candles(symbol, time_frame)
                     self.__local_candles_dict[(symbol, time_frame)] = local_candle
 
     def _update_live_candles(self):

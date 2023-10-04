@@ -2,11 +2,13 @@ import os
 from datetime import datetime
 from typing import List
 
+import pandas as pd
+
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.exchange import Exchange
 from pyccx.interface.market import Market
 from pyccx.model.candle import Candle
-from pyccx.utils import create_directory
+from pyccx.utils import create_directory, resample_time_frame
 
 
 class LocalData:
@@ -61,7 +63,7 @@ class LocalData:
         path = self._local_candles_path(symbol=symbol, time_frame=time_frame)
         Candle.to_csv(candles=candles, path=path, mode=mode)
 
-    def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
+    def download_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
         local_candles = self._load_candles(symbol=symbol, time_frame=time_frame)
 
         # assign value to start timestamp
@@ -87,4 +89,15 @@ class LocalData:
 
     def download_symbols_candles(self, symbols: List[str], time_frame: TimeFrame):
         for symbol in symbols:
-            self.get_candles(symbol=symbol, time_frame=time_frame)
+            self.download_candles(symbol=symbol, time_frame=time_frame)
+
+
+def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame) -> pd.DataFrame:
+    ex = Exchange(exchange=exchange)
+    local_data = LocalData(exchange=ex)
+
+    one_min_candles = local_data.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1)
+    one_min_df = Candle.to_data_frame(candles=one_min_candles)
+    df = resample_time_frame(tohlcv=one_min_df, source_timeframe=TimeFrame.MIN1, destination_timeframe=time_frame)
+
+    return df
