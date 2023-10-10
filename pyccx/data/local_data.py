@@ -1,6 +1,7 @@
+import itertools
 import os
 from datetime import datetime
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 import pandas as pd
 
@@ -95,13 +96,30 @@ class LocalData:
             self.download_candles(symbol=symbol, time_frame=time_frame)
 
 
+__EXCHANGE: Exchange = None
+__LOCAL_DATA: LocalData = None
+
+
 def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame, update: bool = False,
                    proxies: Dict[str, str] = None) -> pd.DataFrame:
-    exchange_ = Exchange(exchange=exchange, proxies=proxies)
-    local_data = LocalData(exchange=exchange_)
+    global __EXCHANGE
+    global __LOCAL_DATA
+    if __EXCHANGE is None or __EXCHANGE.exchange != exchange:
+        __EXCHANGE = Exchange(exchange=exchange, proxies=proxies)
+        __LOCAL_DATA = LocalData(exchange=__EXCHANGE)
 
-    one_min_candles = local_data.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1, update=update)
+    one_min_candles = __LOCAL_DATA.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1, update=update)
     one_min_df = Candle.to_data_frame(candles=one_min_candles)
     df = resample_time_frame(tohlcv=one_min_df, source_timeframe=TimeFrame.MIN1, destination_timeframe=time_frame)
 
     return df
+
+
+def load_dataframes_dict(exchange: str, symbols: List[str], time_frames: List[TimeFrame], update: bool = False,
+                         proxies: Dict[str, str] = None) -> Dict[Tuple[str, int], pd.DataFrame]:
+    dfs_dict = {}
+    for symbol, time_frame in itertools.product(symbols, time_frames):
+        dfs_dict[(symbol, time_frame)] = load_dataframe(exchange=exchange, symbol=symbol, time_frame=time_frames,
+                                                        update=update, proxies=proxies)
+
+    return dfs_dict
