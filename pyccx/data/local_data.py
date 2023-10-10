@@ -119,7 +119,7 @@ def load_dataframes_dict(exchange: str, symbols: List[str], time_frames: List[Ti
                          proxies: Dict[str, str] = None) -> Dict[Tuple[str, int], pd.DataFrame]:
     dfs_dict = {}
     for symbol, time_frame in itertools.product(symbols, time_frames):
-        dfs_dict[(symbol, time_frame)] = load_dataframe(exchange=exchange, symbol=symbol, time_frame=time_frames,
+        dfs_dict[(symbol, time_frame)] = load_dataframe(exchange=exchange, symbol=symbol, time_frame=time_frame,
                                                         update=update, proxies=proxies)
 
     return dfs_dict
