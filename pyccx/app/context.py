@@ -13,8 +13,8 @@ class Context:
         self.__symbols: str = symbols
         self.__time_frames: TimeFrame = time_frames
         self.__pairs: List[Tuple[str, TimeFrame]] = list(itertools.product(self.symbols, self.time_frames))
-        self.__live_data: LiveData = LiveData(exchange=exchange, symbols=symbols, time_frames=time_frames,
-                                              data_root=data_root, candles_count=candles_count)
+        self.__data: LiveData = LiveData(exchange=exchange, symbols=symbols, time_frames=time_frames,
+                                         data_root=data_root, candles_count=candles_count)
 
     @property
     def exchange(self) -> Exchange:
@@ -33,8 +33,8 @@ class Context:
         return self.__pairs
 
     @property
-    def live_data(self) -> LiveData:
-        return self.__live_data
+    def data(self) -> LiveData:
+        return self.__data
 
     def refresh(self):
-        self.__live_data.refresh()
+        self.__data.refresh()
