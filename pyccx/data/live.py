@@ -1,3 +1,4 @@
+import copy
 import itertools
 from datetime import datetime
 from typing import List, Dict, Tuple
@@ -46,10 +47,10 @@ class LiveData:
         return self.__pairs
 
     def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
-        return self.__live_candles_dict[(symbol, time_frame)]
+        return copy.deepcopy(self.__live_candles_dict[(symbol, time_frame)])
 
     def get_dataframe(self, symbol: str, time_frame: TimeFrame) -> pd.DataFrame:
-        candles = self.get_candles(symbol=symbol, time_frame=time_frame)
+        candles = self.__live_candles_dict[(symbol, time_frame)]
         df = Candle.to_dataframe(candles=candles)
 
         return df
