@@ -66,7 +66,7 @@ class Candle:
                 file.write(line)
 
     @staticmethod
-    def to_data_frame(candles: List) -> pd.DataFrame:
+    def to_dataframe(candles: List) -> pd.DataFrame:
         data = [candle.to_list() for candle in candles]
         columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume', 'trade']
         df = pd.DataFrame(data=data, columns=columns)

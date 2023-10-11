@@ -109,7 +109,7 @@ def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame, update: bo
         __LOCAL_DATA = LocalData(exchange=__EXCHANGE)
 
     one_min_candles = __LOCAL_DATA.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1, update=update)
-    one_min_df = Candle.to_data_frame(candles=one_min_candles)
+    one_min_df = Candle.to_dataframe(candles=one_min_candles)
     df = resample_time_frame(tohlcv=one_min_df, source_timeframe=TimeFrame.MIN1, destination_timeframe=time_frame)
 
     return df

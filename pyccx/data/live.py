@@ -2,8 +2,10 @@ import itertools
 from datetime import datetime
 from typing import List, Dict, Tuple
 
+import pandas as pd
+
 from pyccx.constant.time_frame import TimeFrame
-from pyccx.data.local_data import LocalData
+from pyccx.data.local import LocalData
 from pyccx.interface.exchange import Exchange
 from pyccx.interface.market import Market
 from pyccx.model.candle import Candle
@@ -46,6 +48,20 @@ class LiveData:
     def get_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
         return self.__live_candles_dict[(symbol, time_frame)]
 
+    def get_dataframe(self, symbol: str, time_frame: TimeFrame) -> pd.DataFrame:
+        candles = self.get_candles(symbol=symbol, time_frame=time_frame)
+        df = Candle.to_dataframe(candles=candles)
+
+        return df
+
+    def get_dataframes_dict(self, symbols: List[str], time_frames: List[TimeFrame]) \
+            -> Dict[Tuple[str, int], pd.DataFrame]:
+        df_dict = {}
+        for symbol, time_frame in itertools.product(symbols, time_frames):
+            df_dict[(symbol, time_frame)] = self.get_dataframe(symbol=symbol, time_frame=time_frame)
+
+        return df_dict
+
     def _update_local_candles(self):
         for symbol, time_frame in self.pairs:
             if (symbol, time_frame) not in self.__local_candles_dict:
@@ -59,6 +75,18 @@ class LiveData:
                     local_candle = self.__local_data.download_candles(symbol, time_frame)
                     self.__local_candles_dict[(symbol, time_frame)] = local_candle
 
+    def _check_live_candles(self, time_frame: TimeFrame, candles: List[Candle], last_local_candle_timestamp: int,
+                            current_open_timestamp: int):
+        if last_local_candle_timestamp + time_frame != candles[0].timestamp:
+            raise ValueError(f"New candles has missing value at the first of the list.")
+
+        for index in range(1, len(candles)):
+            if candles[index - 1].timestamp + time_frame != candles[index].timestamp:
+                raise ValueError(f"New candles has missing value at index {index}.")
+
+        if current_open_timestamp != candles[-1].timestamp:
+            raise ValueError(f"New candles has missing value at the end of the list.")
+
     def _update_live_candles(self):
         for symbol, time_frame in self.pairs:
             if (symbol, time_frame) not in self.__live_candles_dict:
@@ -69,12 +97,14 @@ class LiveData:
             live_candles = self.__live_candles_dict[(symbol, time_frame)]
 
             last_live_candle_timestamp = live_candles[-1].timestamp
+            last_local_candle_timestamp = local_candles[-1].timestamp
             current_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
             if last_live_candle_timestamp < current_open_timestamp:
-                start_timestamp = local_candles[-1].timestamp + time_frame
+                start_timestamp = last_local_candle_timestamp + time_frame
                 new_candles = self.market.get_candles(symbol, time_frame, start_timestamp)
-                updated_live_candles = local_candles + new_candles
-                self.__live_candles_dict[(symbol, time_frame)] = updated_live_candles
+                self._check_live_candles(time_frame, new_candles, last_local_candle_timestamp, current_open_timestamp)
+                live_candles = local_candles + new_candles
+                self.__live_candles_dict[(symbol, time_frame)] = live_candles
 
     def refresh(self) -> None:
         self._update_local_candles()

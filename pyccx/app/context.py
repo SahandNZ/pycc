@@ -2,7 +2,7 @@ import itertools
 from typing import List, Tuple
 
 from pyccx.constant.time_frame import TimeFrame
-from pyccx.data.live_data import LiveData
+from pyccx.data.live import LiveData
 from pyccx.interface.exchange import Exchange
 
 
