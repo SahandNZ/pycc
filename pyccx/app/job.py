@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime
-from typing import Callable
+from typing import Callable, Dict
 from typing import List
 
 from apscheduler.job import Job as APSJob
@@ -55,9 +55,9 @@ class Job:
         self.aps_job.remove()
         self.__removed = True
 
-    async def run(self, context: Context, args: List) -> None:
-        await asyncio.shield(self._run(context, args))
+    async def run(self, context: Context, args: List, kwargs: Dict) -> None:
+        await asyncio.shield(self._run(context, args, kwargs))
 
-    async def _run(self, context: Context, args: List) -> None:
+    async def _run(self, context: Context, args: List, kwargs: Dict) -> None:
         context.refresh()
-        await self.__callback(context, *args)
+        await self.__callback(context, *args, **kwargs)

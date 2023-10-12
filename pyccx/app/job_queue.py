@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Callable, List
+from typing import Callable, List, Dict
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pyccx.app.context import Context
@@ -34,6 +34,9 @@ class JobQueue:
         else:
             return list(args)
 
+    def _cast_kwargs(self, kwargs):
+        return kwargs if kwargs is not None else {}
+
     def _cast_when(self, interval: int, when: str) -> datetime:
         if 'any' == when:
             return None
@@ -41,21 +44,23 @@ class JobQueue:
             next_timestamp = datetime.now().timestamp() // interval * interval + interval + self.delay
             return datetime.fromtimestamp(next_timestamp)
 
-    def run_once(self, callback: Callable, args: List = None) -> Job:
+    def run_once(self, callback: Callable, args: List = None, kwargs: Dict = None) -> Job:
         args = self._cast_args(args)
+        kwargs = self._cast_kwargs(kwargs)
 
         job = Job(callback=callback)
         job.aps_job = self.scheduler.add_job(
             func=job.run,
             name=job.name,
-            args=(self.__context, args),
+            args=(self.__context, args, kwargs),
         )
 
         return job
 
-    def run_repeating(self, callback: Callable, interval: int, args: List = None, when: str = 'any',
-                      misfire_grace_time: int = None) -> Job:
+    def run_repeating(self, callback: Callable, interval: int, args: List = None, kwargs: Dict = None,
+                      when: str = 'any', misfire_grace_time: int = None) -> Job:
         args = self._cast_args(args)
+        kwargs = self._cast_kwargs(kwargs)
         start_date = self._cast_when(interval=interval, when=when)
 
         job = Job(callback=callback)
@@ -65,7 +70,7 @@ class JobQueue:
             seconds=interval,
             trigger="interval",
             start_date=start_date,
-            args=(self.__context, args),
+            args=(self.__context, args, kwargs),
             misfire_grace_time=misfire_grace_time
         )
 
