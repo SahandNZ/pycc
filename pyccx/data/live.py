@@ -71,22 +71,20 @@ class LiveData:
             else:
                 local_candle = self.__local_candles_dict[(symbol, time_frame)]
                 current_timestamp = datetime.now().timestamp()
-                update_timestamp = local_candle[-1].timestamp + time_frame * self.market.max_candles
+                update_timestamp = local_candle[-1].timestamp + time_frame * int(self.market.max_candles * 0.95)
                 if update_timestamp < current_timestamp:
                     local_candle = self.__local_data.download_candles(symbol, time_frame)
-                    self.__local_candles_dict[(symbol, time_frame)] = local_candle
+                self.__local_candles_dict[(symbol, time_frame)] = local_candle
 
-    def _check_live_candles(self, time_frame: TimeFrame, candles: List[Candle], last_local_candle_timestamp: int,
-                            current_open_timestamp: int):
-        if last_local_candle_timestamp + time_frame != candles[0].timestamp:
-            raise ValueError(f"New candles has missing value at the first of the list.")
+    def _refine_new_candles(self, symbol: str, time_frame: TimeFrame, start_timestamp: int) -> List[Candle]:
+        return self.market.get_candles(symbol, time_frame, start_timestamp)
 
-        for index in range(1, len(candles)):
-            if candles[index - 1].timestamp + time_frame != candles[index].timestamp:
-                raise ValueError(f"New candles has missing value at index {index}.")
-
-        if current_open_timestamp != candles[-1].timestamp:
-            raise ValueError(f"New candles has missing value at the end of the list.")
+    def _check_new_candles(self, symbol: str, time_frame: TimeFrame, candles: List[Candle], start_timestamp: int,
+                           stop_timestamp: int) -> List[Candle]:
+        if start_timestamp != candles[0].timestamp or stop_timestamp != candles[-1].timestamp:
+            return self._refine_new_candles(symbol, time_frame, start_timestamp)
+        else:
+            return candles
 
     def _update_live_candles(self):
         for symbol, time_frame in self.pairs:
@@ -99,11 +97,11 @@ class LiveData:
 
             last_live_candle_timestamp = live_candles[-1].timestamp
             last_local_candle_timestamp = local_candles[-1].timestamp
-            current_open_timestamp = datetime.now().timestamp() // time_frame * time_frame
-            if last_live_candle_timestamp < current_open_timestamp:
+            stop_timestamp = datetime.now().timestamp() // time_frame * time_frame
+            if last_live_candle_timestamp < stop_timestamp:
                 start_timestamp = last_local_candle_timestamp + time_frame
                 new_candles = self.market.get_candles(symbol, time_frame, start_timestamp)
-                self._check_live_candles(time_frame, new_candles, last_local_candle_timestamp, current_open_timestamp)
+                new_candles = self._check_new_candles(symbol, time_frame, new_candles, start_timestamp, stop_timestamp)
                 live_candles = local_candles + new_candles
                 self.__live_candles_dict[(symbol, time_frame)] = live_candles
 
