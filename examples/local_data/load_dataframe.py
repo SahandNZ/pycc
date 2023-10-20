@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 
-from pyccx.data.local_data import load_dataframe
+from pyccx.data.local import load_dataframe
 
 
 def main():
