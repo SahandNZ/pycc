@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Callable, List, Dict
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.executors.pool import ThreadPoolExecutor
+from apscheduler.schedulers.blocking import BlockingScheduler
+
 from pyccx.app.context import Context
 from pyccx.app.job import Job
 
@@ -10,7 +12,7 @@ class JobQueue:
     def __init__(self, context: Context, delay: int):
         self.__context: Context = context
         self.__delay: int = delay
-        self.__scheduler = AsyncIOScheduler()
+        self.__scheduler: BlockingScheduler = None
 
     @property
     def context(self) -> Context:
@@ -21,7 +23,10 @@ class JobQueue:
         return self.__delay
 
     @property
-    def scheduler(self) -> AsyncIOScheduler:
+    def scheduler(self) -> BlockingScheduler:
+        if self.__scheduler is None:
+            executors = {'default': ThreadPoolExecutor(max_workers=8)}
+            self.__scheduler = BlockingScheduler(executors=executors)
         return self.__scheduler
 
     def start(self):
