@@ -30,3 +30,19 @@ class TimeFrame:
             return f"{week} Week" + ("s" if 1 < week else "")
         else:
             return "1 Month"
+
+    @staticmethod
+    def from_str(value: str):
+        tokens = value.split()
+        number = int(tokens[0])
+        unit = tokens[1].lower()
+        if "minute" in unit:
+            return number * TimeFrame.MIN1
+        elif "hour" in unit:
+            return number * TimeFrame.HOUR1
+        elif "day" in unit:
+            return number * TimeFrame.DAY1
+        elif "week" in unit:
+            return number * TimeFrame.WEEK1
+        else:
+            return TimeFrame.MONTH1
