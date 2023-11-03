@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import List, Dict, Tuple
 
 import pandas as pd
+from tqdm import tqdm
 
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.exchange import Exchange
@@ -118,7 +119,9 @@ def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame, update: bo
 def load_dataframes_dict(exchange: str, symbols: List[str], time_frames: List[TimeFrame], update: bool = False,
                          proxies: Dict[str, str] = None) -> Dict[Tuple[str, int], pd.DataFrame]:
     dfs_dict = {}
-    for symbol, time_frame in itertools.product(symbols, time_frames):
+    bar = tqdm(list(itertools.product(symbols, time_frames)))
+    bar.set_description_str("Loading Dataframes")
+    for symbol, time_frame in bar:
         dfs_dict[(symbol, time_frame)] = load_dataframe(exchange=exchange, symbol=symbol, time_frame=time_frame,
                                                         update=update, proxies=proxies)
 
