@@ -96,6 +96,11 @@ class LocalData:
         for symbol in symbols:
             self.download_candles(symbol=symbol, time_frame=time_frame)
 
+    def load_dataframe(self, symbol: str, time_frame: TimeFrame) -> pd.DataFrame:
+        path = self._local_candles_path(symbol=symbol, time_frame=time_frame)
+        local_dataframe = Candle.load_dataframe(path)
+        return local_dataframe
+
 
 __EXCHANGE: Exchange = None
 __LOCAL_DATA: LocalData = None
@@ -109,8 +114,12 @@ def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame, update: bo
         __EXCHANGE = Exchange(exchange=exchange, proxies=proxies)
         __LOCAL_DATA = LocalData(exchange=__EXCHANGE)
 
-    one_min_candles = __LOCAL_DATA.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1, update=update)
-    one_min_df = Candle.to_dataframe(candles=one_min_candles)
+    if update:
+        one_min_candles = __LOCAL_DATA.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1, update=update)
+        one_min_df = Candle.to_dataframe(candles=one_min_candles)
+    else:
+        one_min_df = __LOCAL_DATA.load_dataframe(symbol=symbol, time_frame=TimeFrame.MIN1)
+
     df = resample_time_frame(tohlcv=one_min_df, source_timeframe=TimeFrame.MIN1, destination_timeframe=time_frame)
 
     return df

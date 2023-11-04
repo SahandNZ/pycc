@@ -80,6 +80,10 @@ class Candle:
         return 'timestamp,open,high,low,close,volume,trade\n'
 
     @staticmethod
+    def load_dataframe(path: str) -> pd.DataFrame:
+        return pd.read_csv(path, index_col=0)
+
+    @staticmethod
     def from_list(data):
         instance = Candle()
 

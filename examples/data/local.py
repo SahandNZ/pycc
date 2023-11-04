@@ -10,7 +10,7 @@ def main():
     parser.add_argument('--time-frame', action='store', type=int, required=False, default=300)
     parser.add_argument('--symbol', action='store', type=str, required=False, default='BTC-USDT')
     parser.add_argument('--exchange', action='store', type=str, required=False, default='binance')
-    parser.add_argument('--data-root', action='store', type=str, required=False, default="./../data")
+    parser.add_argument('--data-root', action='store', type=str, required=False, default="./../../data")
     args = parser.parse_args()
 
     if args.data_root is not None:
