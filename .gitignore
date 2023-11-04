@@ -1,5 +1,7 @@
 # Project
-**/data/candle
+data
+!examples/data
+!pyccx
 
 # Python environments
 **/env/
