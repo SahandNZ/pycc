@@ -1,21 +1,21 @@
 import math
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import List
+from typing import List, Any, Callable
 
 from tqdm import tqdm
 
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.https import HttpsClient
-from pyccx.interface.ws import WsClient
+from pyccx.interface.wss import WssClient
 from pyccx.model.candle import Candle
 from pyccx.model.symbol_info import SymbolInfo
 
 
 class Market(ABC):
-    def __init__(self, https: HttpsClient, ws: WsClient):
+    def __init__(self, https: HttpsClient, wss: WssClient):
         self._https: HttpsClient = https
-        self._ws: WsClient = ws
+        self._wss: WssClient = wss
 
     @property
     @abstractmethod
@@ -78,3 +78,10 @@ class Market(ABC):
                 candles.extend(req_candles)
 
         return candles
+
+    @abstractmethod
+    def subscribe_candles(self, symbol: str, time_frame: TimeFrame, on_message: Callable[[Candle], Any]):
+        raise NotImplementedError()
+
+    def join_wss(self):
+        self._wss.join()

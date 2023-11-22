@@ -1,19 +1,19 @@
 from datetime import datetime
-from typing import List
+from typing import List, Dict, Callable, Any
 
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.exchange.binance.future.decorator import *
 from pyccx.exchange.binance.future.encoder import *
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.market import Market
-from pyccx.interface.ws import WsClient
+from pyccx.interface.wss import WssClient
 from pyccx.model.candle import Candle
 from pyccx.model.symbol_info import SymbolInfo
 
 
 class BinanceFutureMarket(Market):
-    def __init__(self, https: HttpsClient, ws: WsClient):
-        super().__init__(https, ws)
+    def __init__(self, https: HttpsClient, wss: WssClient):
+        super().__init__(https, wss)
 
     @property
     def max_candles(self) -> int:
@@ -66,3 +66,15 @@ class BinanceFutureMarket(Market):
         response = self._https.get(endpoint=endpoint, params=params)
         candles = [Candle.from_binance(item) for item in response]
         return candles
+
+    @symbol_decorator
+    @time_frame_decorator
+    def subscribe_candles(self, symbol: str, time_frame: TimeFrame, on_message: Callable[[Candle], Any]):
+        def pre_on_message(message: Dict):
+            data = message["k"]
+            candle = Candle.from_binance_ws(data)
+            on_message(candle)
+
+        self._wss.subscribe_stream(stream=f"{symbol.lower()}@kline_{time_frame}", on_message=pre_on_message)
+
+

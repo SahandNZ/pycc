@@ -3,16 +3,16 @@ from typing import List
 
 from pyccx.constant.order_side import OrderSide
 from pyccx.interface.https import HttpsClient
-from pyccx.interface.ws import WsClient
+from pyccx.interface.wss import WssClient
 from pyccx.model.balance import Balance
 from pyccx.model.order import Order
 from pyccx.model.position import Position
 
 
 class Trade(ABC):
-    def __init__(self, https: HttpsClient, ws: WsClient):
+    def __init__(self, https: HttpsClient, wss: WssClient):
         self._https: HttpsClient = https
-        self._ws: WsClient = ws
+        self._wss: WssClient = wss
 
     @abstractmethod
     def get_balance(self) -> Balance:

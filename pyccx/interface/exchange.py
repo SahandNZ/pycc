@@ -13,7 +13,7 @@ class Exchange:
 
         # import classes
         https_cls = import_class(module=f"pyccx.exchange.{exchange}.future.https")
-        ws_cls = import_class(module=f"pyccx.exchange.{exchange}.future.ws")
+        ws_cls = import_class(module=f"pyccx.exchange.{exchange}.future.wss")
         market_cls = import_class(module=f"pyccx.exchange.{exchange}.future.market")
         trade_cls = import_class(module=f"pyccx.exchange.{exchange}.future.trade")
 

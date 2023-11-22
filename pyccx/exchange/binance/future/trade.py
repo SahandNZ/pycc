@@ -4,15 +4,15 @@ from pyccx.constant.hedge_mode import HedgeMode
 from pyccx.exchange.binance.future.decorator import *
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.trade import Trade
-from pyccx.interface.ws import WsClient
+from pyccx.interface.wss import WssClient
 from pyccx.model.balance import Balance
 from pyccx.model.order import Order
 from pyccx.model.position import Position
 
 
 class BinanceFutureTrade(Trade):
-    def __init__(self, https: HttpsClient, ws: WsClient):
-        super().__init__(https, ws)
+    def __init__(self, https: HttpsClient, wss: WssClient):
+        super().__init__(https, wss)
 
     def get_balance(self) -> Balance:
         endpoint = "/fapi/v2/balance"
