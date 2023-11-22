@@ -1,17 +1,16 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Dict, Tuple
 from urllib import parse
 
 import requests as requests
 from requests import Response
 
+from pyccx.interface.client import Client
 
-class HttpsClient(ABC):
+
+class HttpsClient(Client):
     def __init__(self, base_url: str, key: str, secret_key: str, proxies: Dict[str, str]):
-        self._base_url: str = base_url
-        self._key: str = key
-        self._secret_key: str = secret_key
-        self._proxies = proxies if proxies else {}
+        super().__init__(base_url, key, secret_key, proxies)
 
     @abstractmethod
     def sign(self, method: str, endpoint: str, params: Dict, timestamp: int) -> str:
