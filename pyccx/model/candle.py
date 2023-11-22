@@ -31,6 +31,21 @@ class Candle:
         return instance
 
     @staticmethod
+    def from_binance_ws(data: Dict):
+        instance = Candle()
+
+        instance.timestamp = data["t"] / 1000
+        instance.datetime = datetime.fromtimestamp(instance.timestamp)
+        instance.open = float(data["o"])
+        instance.high = float(data["h"])
+        instance.low = float(data["l"])
+        instance.close = float(data["c"])
+        instance.volume = float(data["v"])
+        instance.trade = int(data["n"])
+
+        return instance
+
+    @staticmethod
     def from_bitget(data: Dict):
         instance = Candle()
 
