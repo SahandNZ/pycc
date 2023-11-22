@@ -28,8 +28,8 @@ def main():
     parser.add_argument('--run-examples', action='store_true')
     parser.add_argument('--time-frame', action='store', type=int, required=False, default=60)
     parser.add_argument('--symbol', action='store', type=str, required=False, default='BTC-USDT')
-    parser.add_argument('--data-root', action='store', type=str, required=False, default="./../data")
-    parser.add_argument('--config-path', action='store', type=str, required=False, default="./config.json")
+    parser.add_argument('--data-root', action='store', type=str, required=False, default="./../../data")
+    parser.add_argument('--config-path', action='store', type=str, required=False, default="config.json")
     args = parser.parse_args()
 
     print(os.path.curdir)
