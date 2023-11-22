@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyccx"
-version = "0.1.19"
+version = "0.1.20"
 authors = [
   { name="Sahand Nazarzadeh", email="sahand.nazarzadeh@gmail.com" },
 ]
@@ -20,5 +20,7 @@ dependencies = [
     "tqdm==4.66.1",
     "pandas==2.1.1",
     "requests==2.31.0",
-    "apscheduler==3.10.4"
+    "python-socks==2.4.3",
+    "apscheduler==3.10.4",
+    "websocket-client==1.6.4",
 ]
