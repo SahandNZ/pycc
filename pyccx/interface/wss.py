@@ -55,25 +55,35 @@ class WssClient(Client):
 
     def _connect(self):
         self._ws_connect()
-        self._recv_thread.start()
-        self._pong_thread.start()
-        self._reconnect_thread.start()
+        if not self._recv_thread.is_alive():
+            self._recv_thread.start()
+        if not self._pong_thread.is_alive():
+            self._pong_thread.start()
+        if not self._reconnect_thread.is_alive():
+            self._reconnect_thread.start()
 
     def _reconnect(self):
         while True:
-            time.sleep(self._reconnect_interval)
-            with self._send_lock:
-                with self._recv_lock:
-                    self._ws_connect()
+            try:
+                time.sleep(self._reconnect_interval)
+                with self._send_lock:
+                    with self._recv_lock:
+                        self._ws_connect()
 
-            for payload in self._payload_history:
-                self._send(payload)
+                for payload in self._payload_history:
+                    self._send(payload)
+
+            except Exception as e:
+                print(e)
 
     def _pong(self):
         while True:
-            time.sleep(self._pong_interval)
-            with self._send_lock:
-                self.__ws.pong()
+            try:
+                time.sleep(self._pong_interval)
+                with self._send_lock:
+                    self.__ws.pong()
+            except Exception as e:
+                print(e)
 
     def _pre_recv(self):
         while True:
