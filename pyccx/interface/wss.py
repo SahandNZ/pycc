@@ -77,12 +77,15 @@ class WssClient(Client):
 
     def _pre_recv(self):
         while True:
-            with self._recv_lock:
-                message = self.__ws.recv()
+            try:
+                with self._recv_lock:
+                    message = self.__ws.recv()
 
-            if 0 < len(message):
-                message_dict = json.loads(message)
-                self._recv(message_dict)
+                if 0 < len(message):
+                    message_dict = json.loads(message)
+                    self._recv(message_dict)
+            except Exception as e:
+                print(e)
 
     @abstractmethod
     def _recv(self, message_dict: Dict):
