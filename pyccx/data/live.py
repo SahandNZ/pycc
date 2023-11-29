@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import List, Dict, Tuple
 
 import pandas as pd
+
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.data.local import LocalData
 from pyccx.interface.exchange import Exchange
@@ -21,8 +22,6 @@ class LiveData:
         self.__local_data: LocalData = LocalData(exchange=exchange, candles_count=candles_count)
         self.__local_candles_dict: Dict[Tuple[str, TimeFrame], List[Candle]] = {}
         self.__live_candles_dict: Dict[Tuple[str, TimeFrame], List[Candle]] = {}
-
-        self._update_local_candles()
 
     @property
     def exchange(self) -> Exchange:
