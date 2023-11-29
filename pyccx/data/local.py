@@ -4,19 +4,17 @@ from datetime import datetime
 from typing import List, Dict, Tuple
 
 import pandas as pd
-from tqdm import tqdm
-
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.exchange import Exchange
 from pyccx.interface.market import Market
 from pyccx.model.candle import Candle
 from pyccx.utils import create_directory, resample_time_frame
+from tqdm import tqdm
 
 
 class LocalData:
-    def __init__(self, exchange: Exchange, data_root: str = None, candles_count: int = None):
+    def __init__(self, exchange: Exchange, candles_count: int = None):
         self.__exchange: Exchange = exchange
-        self.__data_root: str = data_root
         self.__candles_count: int = candles_count
 
     @property
@@ -29,7 +27,7 @@ class LocalData:
 
     @property
     def data_root(self) -> str:
-        return self.__data_root or os.environ.get('DATA_ROOT') or './data/'
+        return os.environ.get('DATA_ROOT', './data/')
 
     @property
     def candles_count(self) -> int:

@@ -10,17 +10,17 @@ from pyccx.utils import call_with_dict
 
 
 class Application:
-    def __init__(self, exchange: Exchange, symbols: List[str], time_frames: List[TimeFrame], data_root: str = None,
-                 candles_count: int = None, delay: int = 0.1):
+    def __init__(self, exchange: Exchange, symbols: List[str], time_frames: List[TimeFrame], candles_count: int = None,
+                 delay: int = 0.1):
         self.__context = Context(exchange=exchange, symbols=symbols, time_frames=time_frames,
-                                 data_root=data_root, candles_count=candles_count)
+                                 candles_count=candles_count)
         self.__job_queue = JobQueue(context=self.context, delay=delay)
 
     @staticmethod
-    def from_config(config_dict: Dict):
-        exchange = Exchange.from_config(config_dict)
+    def from_dict(dct: Dict):
+        exchange = Exchange.from_dict(dct)
 
-        dct = copy.deepcopy(config_dict)
+        dct = copy.deepcopy(dct)
         dct['exchange'] = exchange
         app = call_with_dict(Application, dct)
 

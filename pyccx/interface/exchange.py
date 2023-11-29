@@ -32,8 +32,8 @@ class Exchange:
         self.__future: Future = Future(market=future_market, trade=future_trade)
 
     @staticmethod
-    def from_config(config_dict: Dict):
-        return call_with_dict(Exchange, config_dict)
+    def from_dict(dct: Dict):
+        return call_with_dict(Exchange, dct)
 
     @property
     def exchange(self) -> str:

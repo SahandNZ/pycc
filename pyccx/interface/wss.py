@@ -17,7 +17,7 @@ class WssClient(Client):
         self._pong_interval: int = pong_interval
         self._reconnect_interval: int = reconnect_interval
 
-        if "socks5" in proxies:
+        if proxies is not None and "socks5" in proxies:
             socks5 = proxies["socks5"].split("/")[-1]
             proxy_username, others, proxy_port = socks5.split(":")
             proxy_password, proxy_host = others.split("@")
