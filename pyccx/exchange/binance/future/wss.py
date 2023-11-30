@@ -1,4 +1,5 @@
 import json
+import time
 from typing import Dict, Callable, Any
 
 from pyccx.interface.wss import WssClient
@@ -15,6 +16,7 @@ class BinanceFutureWssClient(WssClient):
         payload_dict = {"method": "SUBSCRIBE", "params": [stream], "id": stream_id}
         payload = json.dumps(payload_dict)
 
+        time.sleep(0.1)
         self._send(payload)
         self._stream_to_on_message[stream] = on_message
 
@@ -23,5 +25,6 @@ class BinanceFutureWssClient(WssClient):
             stream = message_dict["stream"]
             data = message_dict["data"]
 
-            on_message_callback = self._stream_to_on_message[stream]
-            on_message_callback(data)
+            if stream in self._stream_to_on_message:
+                on_message_callback = self._stream_to_on_message[stream]
+                on_message_callback(data)
