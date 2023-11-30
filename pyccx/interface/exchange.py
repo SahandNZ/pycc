@@ -13,22 +13,22 @@ class Exchange:
 
         # import classes
         https_cls = import_class(module=f"pyccx.exchange.{exchange}.future.https")
-        ws_cls = import_class(module=f"pyccx.exchange.{exchange}.future.wss")
+        wss_cls = import_class(module=f"pyccx.exchange.{exchange}.future.wss")
         market_cls = import_class(module=f"pyccx.exchange.{exchange}.future.market")
         trade_cls = import_class(module=f"pyccx.exchange.{exchange}.future.trade")
 
         # create protocol instances
         params = {"api_key": api_key, "secret_key": secret_key, "passphrase": passphrase, "proxies": proxies}
         https = call_with_dict(https_cls, params)
-        ws = call_with_dict(ws_cls, params)
+        wss = call_with_dict(wss_cls, params)
 
         # TODO create wallet and spot instances
         self.__wallet: Wallet = None
         self.__spot: Spot = None
 
         # create future instance
-        future_market = market_cls(https, ws)
-        future_trade = trade_cls(https, ws)
+        future_market = market_cls(https, wss)
+        future_trade = trade_cls(https, wss)
         self.__future: Future = Future(market=future_market, trade=future_trade)
 
     @staticmethod
