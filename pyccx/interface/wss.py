@@ -64,38 +64,28 @@ class WssClient(Client):
 
     def _reconnect(self):
         while True:
-            try:
-                time.sleep(self._reconnect_interval)
-                with self._send_lock:
-                    with self._recv_lock:
-                        self._ws_connect()
+            time.sleep(self._reconnect_interval)
+            with self._send_lock:
+                with self._recv_lock:
+                    self._ws_connect()
 
-                for payload in self._payload_history:
-                    self._send(payload)
-
-            except Exception as e:
-                print(e)
+            for payload in self._payload_history:
+                self._send(payload)
 
     def _pong(self):
         while True:
-            try:
-                time.sleep(self._pong_interval)
-                with self._send_lock:
-                    self.__ws.pong()
-            except Exception as e:
-                print(e)
+            time.sleep(self._pong_interval)
+            with self._send_lock:
+                self.__ws.pong()
 
     def _pre_recv(self):
         while True:
-            try:
-                with self._recv_lock:
-                    message = self.__ws.recv()
+            with self._recv_lock:
+                message = self.__ws.recv()
 
-                if 0 < len(message):
-                    message_dict = json.loads(message)
-                    self._recv(message_dict)
-            except Exception as e:
-                print(e)
+            if 0 < len(message):
+                message_dict = json.loads(message)
+                self._recv(message_dict)
 
     @abstractmethod
     def _recv(self, message_dict: Dict):
