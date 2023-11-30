@@ -65,7 +65,7 @@ class Candle:
         with open(path, 'r') as file:
             lines = file.readlines()
             for line in lines[1:]:
-                tokens = line.split(',')
+                tokens = line.replace("\n", "").split(',')
                 candle = Candle.from_list(tokens)
                 candles.append(candle)
 
