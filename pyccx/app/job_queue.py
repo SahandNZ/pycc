@@ -3,24 +3,18 @@ from typing import Callable, List, Dict
 
 from apscheduler.executors.pool import ThreadPoolExecutor
 from apscheduler.schedulers.blocking import BlockingScheduler
-
 from pyccx.app.context import Context
 from pyccx.app.job import Job
 
 
 class JobQueue:
-    def __init__(self, context: Context, delay: int):
+    def __init__(self, context: Context):
         self.__context: Context = context
-        self.__delay: int = delay
         self.__scheduler: BlockingScheduler = None
 
     @property
     def context(self) -> Context:
         return self.__context
-
-    @property
-    def delay(self) -> int:
-        return self.__delay
 
     @property
     def scheduler(self) -> BlockingScheduler:
@@ -46,7 +40,7 @@ class JobQueue:
         if 'any' == when:
             return None
         elif 'open' == when:
-            next_timestamp = datetime.now().timestamp() // interval * interval + interval + self.delay
+            next_timestamp = datetime.now().timestamp() // interval * interval + interval
             return datetime.fromtimestamp(next_timestamp)
 
     def run_once(self, callback: Callable, args: List = None, kwargs: Dict = None) -> Job:

@@ -3,7 +3,6 @@ from typing import Callable, Dict
 from typing import List
 
 from apscheduler.job import Job as APSJob
-
 from pyccx.app.context import Context
 
 
@@ -40,15 +39,15 @@ class Job:
         return self.__enabled
 
     @enabled.setter
-    def enabled(self, status: bool) -> None:
-        if status:
+    def enabled(self, value: bool):
+        if value:
             self.aps_job.resume()
         else:
             self.aps_job.pause()
-        self.__enabled = status
+        self.__enabled = value
 
     @property
-    def next_run_datetime(self) -> datetime:
+    def next_run_time(self) -> datetime:
         return self.aps_job.next_run_time
 
     def schedule_removal(self) -> None:
@@ -56,8 +55,5 @@ class Job:
         self.__removed = True
 
     def run(self, context: Context, args: List, kwargs: Dict) -> None:
-        self._run(context, args, kwargs)
-
-    def _run(self, context: Context, args: List, kwargs: Dict) -> None:
         context.refresh()
-        self.__callback(context, *args, **kwargs)
+        self.callback(context, *args, **kwargs)

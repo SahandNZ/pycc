@@ -10,11 +10,10 @@ from pyccx.utils import call_with_dict
 
 
 class Application:
-    def __init__(self, exchange: Exchange, symbols: List[str], time_frames: List[TimeFrame], candles_count: int = None,
-                 delay: int = 0.1):
+    def __init__(self, exchange: Exchange, symbols: List[str], time_frames: List[TimeFrame], candles_count: int = None):
         self.__context = Context(exchange=exchange, symbols=symbols, time_frames=time_frames,
                                  candles_count=candles_count)
-        self.__job_queue = JobQueue(context=self.context, delay=delay)
+        self.__job_queue = JobQueue(context=self.context)
 
     @staticmethod
     def from_dict(dct: Dict):
@@ -34,6 +33,5 @@ class Application:
     def job_queue(self) -> JobQueue:
         return self.__job_queue
 
-    def run(self):
+    def start(self):
         self.job_queue.start()
-        asyncio.get_event_loop().run_forever()
