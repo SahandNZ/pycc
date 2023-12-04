@@ -11,15 +11,9 @@
             "ETH-USDT",
             "BCH-USDT",
             "XRP-USDT",
-            "EOS-USDT",
-            "LTC-USDT",
-            "TRX-USDT",
-            "ETC-USDT",
-            "LINK-USDT",
-            "XLM-USDT"
+            "EOS-USDT"
         ],
         "time-frames": [
-            3600,
             86400
         ]
     }

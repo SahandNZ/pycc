@@ -15,7 +15,7 @@ def print_on_message(symbol: str, time_frame: int, candle: Candle):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config-path', action='store', type=str, required=False, default="config.json")
+    parser.add_argument('--config-path', action='store', type=str, required=False, default="./../config.json")
     args = parser.parse_args()
 
     with open(args.config_path, 'r') as file:
