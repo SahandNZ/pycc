@@ -34,4 +34,5 @@ class Application:
         return self.__job_queue
 
     def start(self):
+        self.context.refresh()
         self.job_queue.start()
