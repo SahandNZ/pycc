@@ -3,7 +3,6 @@ import functools
 import itertools
 import json
 import sys
-import time
 
 from pyccx.app.application import Application
 from pyccx.model.candle import Candle
@@ -25,7 +24,6 @@ def main():
     for s, tf in itertools.product(app.context.symbols, app.context.time_frames):
         on_message = functools.partial(print_on_message, s, tf)
         app.context.exchange.future.market.subscribe_candles(symbol=s, time_frame=tf, on_message=on_message)
-        time.sleep(1)
 
     app.context.exchange.future.market.join_wss()
 
