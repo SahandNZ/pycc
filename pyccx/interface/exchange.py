@@ -18,6 +18,7 @@ class Exchange:
         trade_cls = import_class(module=f"pyccx.exchange.{exchange}.future.trade")
 
         # create protocol instances
+        proxies = proxies or {}
         params = {"api_key": api_key, "secret_key": secret_key, "passphrase": passphrase, "proxies": proxies}
         https = call_with_dict(https_cls, params)
         wss = call_with_dict(wss_cls, params)
