@@ -126,11 +126,20 @@ def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame, update: bo
     return df
 
 
-def load_dataframes_dict(exchange: str, symbols: List[str], time_frames: List[TimeFrame], update: bool = False,
-                         proxies: Dict[str, str] = None) -> Dict[Tuple[str, int], pd.DataFrame]:
+def load_dataframes_dict(
+        exchange: str,
+        symbols: List[str],
+        time_frames: List[TimeFrame],
+        update: bool = False,
+        proxies: Dict[str, str] = None,
+        show_progress_bar: bool = True
+) -> Dict[Tuple[str, int], pd.DataFrame]:
+    bar = list(itertools.product(symbols, time_frames))
+    if show_progress_bar:
+        bar = tqdm(bar)
+        bar.set_description_str("Loading Dataframes")
+
     dfs_dict = {}
-    bar = tqdm(list(itertools.product(symbols, time_frames)))
-    bar.set_description_str("Loading Dataframes")
     for symbol, time_frame in bar:
         df = load_dataframe(exchange=exchange, symbol=symbol, time_frame=time_frame, update=update, proxies=proxies)
         dfs_dict[(symbol, time_frame)] = df
