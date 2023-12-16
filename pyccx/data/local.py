@@ -4,12 +4,14 @@ from datetime import datetime
 from typing import List, Dict, Tuple
 
 import pandas as pd
+from tqdm import tqdm
+
 from pyccx.constant.time_frame import TimeFrame
+from pyccx.defaults import DATA_ROOT, BASE_TIME_FRAME
 from pyccx.interface.exchange import Exchange
 from pyccx.interface.market import Market
 from pyccx.model.candle import Candle
 from pyccx.utils import create_directory, resample_time_frame
-from tqdm import tqdm
 
 
 class LocalData:
@@ -26,18 +28,19 @@ class LocalData:
         return self.exchange.future.market
 
     @property
-    def data_root(self) -> str:
-        return os.environ.get('DATA_ROOT', './data/')
+    def directory(self) -> str:
+        return os.path.join(DATA_ROOT, "candle")
 
     @property
     def candles_count(self) -> int:
         return self.__candles_count
 
     def _local_candles_path(self, symbol: str, time_frame: str) -> str:
-        root = os.path.join(self.data_root, 'candle', self.exchange.exchange, symbol)
-        if not os.path.exists(root):
-            create_directory(root)
-        return os.path.join(root, f"{time_frame}.csv")
+        exchange_symbol_directory = os.path.join(self.directory, self.exchange.exchange, symbol)
+        create_directory(exchange_symbol_directory)
+        file_path = os.path.join(exchange_symbol_directory, f"{time_frame}.csv")
+
+        return file_path
 
     def _load_candles(self, symbol: str, time_frame: TimeFrame) -> List[Candle]:
         path = self._local_candles_path(symbol=symbol, time_frame=time_frame)
@@ -113,12 +116,12 @@ def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame, update: bo
         __LOCAL_DATA = LocalData(exchange=__EXCHANGE)
 
     if update:
-        one_min_candles = __LOCAL_DATA.download_candles(symbol=symbol, time_frame=TimeFrame.MIN1, update=update)
-        one_min_df = Candle.to_dataframe(candles=one_min_candles)
+        candles = __LOCAL_DATA.download_candles(symbol=symbol, time_frame=BASE_TIME_FRAME, update=update)
+        sdf = Candle.to_dataframe(candles=candles)
     else:
-        one_min_df = __LOCAL_DATA.load_dataframe(symbol=symbol, time_frame=TimeFrame.MIN1)
+        sdf = __LOCAL_DATA.load_dataframe(symbol=symbol, time_frame=BASE_TIME_FRAME)
 
-    df = resample_time_frame(tohlcv=one_min_df, source_timeframe=TimeFrame.MIN1, destination_timeframe=time_frame)
+    df = resample_time_frame(tohlcv=sdf, source_timeframe=BASE_TIME_FRAME, destination_timeframe=time_frame)
 
     return df
 
@@ -129,7 +132,7 @@ def load_dataframes_dict(exchange: str, symbols: List[str], time_frames: List[Ti
     bar = tqdm(list(itertools.product(symbols, time_frames)))
     bar.set_description_str("Loading Dataframes")
     for symbol, time_frame in bar:
-        dfs_dict[(symbol, time_frame)] = load_dataframe(exchange=exchange, symbol=symbol, time_frame=time_frame,
-                                                        update=update, proxies=proxies)
+        df = load_dataframe(exchange=exchange, symbol=symbol, time_frame=time_frame, update=update, proxies=proxies)
+        dfs_dict[(symbol, time_frame)] = df
 
     return dfs_dict
