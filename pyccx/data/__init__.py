@@ -2,7 +2,7 @@ import itertools
 from typing import Dict, List, Tuple
 
 import pandas as pd
-from tqdm.auto import tqdm
+from rich.progress import Progress
 
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.data.local import LocalData
@@ -40,16 +40,19 @@ def load_dataframes_dict(
         time_frames: List[TimeFrame],
         update: bool = False,
         proxies: Dict[str, str] = None,
-        show_progress_bar: bool = True
+        progress: Progress = None,
 ) -> Dict[Tuple[str, int], pd.DataFrame]:
-    bar = list(itertools.product(symbols, time_frames))
-    if show_progress_bar:
-        bar = tqdm(bar)
-        bar.set_description_str("Loading Dataframes")
+    items = list(itertools.product(symbols, time_frames))
+
+    if progress is not None:
+        task = progress.add_task(description="Loading DataFrames", total=len(items))
 
     dfs_dict = {}
-    for symbol, time_frame in bar:
+    for symbol, time_frame in items:
         df = load_dataframe(exchange=exchange, symbol=symbol, time_frame=time_frame, update=update, proxies=proxies)
-        dfs_dict[(symbol, time_frame)] = df
+        dfs_dict[symbol, time_frame] = df
+
+        if progress is not None:
+            progress.update(task, advance=1)
 
     return dfs_dict
