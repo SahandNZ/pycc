@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyccx"
-version = "0.1.29"
+version = "0.1.30"
 authors = [
   { name="Sahand Nazarzadeh", email="sahand.nazarzadeh@gmail.com" },
 ]
@@ -17,7 +17,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "tqdm==4.66.1",
+    "rich==13.7.0",
     "pandas==2.1.1",
     "requests==2.31.0",
     "python-socks==2.4.3",
