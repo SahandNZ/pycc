@@ -1,11 +1,10 @@
 import copy
 import ssl
 import time
+import websocket
 from threading import Lock, Thread
 from typing import List, Dict, Callable, Any
 from urllib.parse import urlparse
-
-import websocket
 
 
 class Websocket:
@@ -46,17 +45,14 @@ class Websocket:
         self._recv_thread.join()
 
     def _connect(self):
-        with self._send_lock:
-            if not self._ws.connected and 0 < len(self._send_history):
-                self._ws.connect(self._url, **self._proxy_params)
-                self._send_buffer = copy.deepcopy(self._send_history)
+        if not self._ws.connected and 0 < len(self._send_history):
+            self._ws.connect(self._url, **self._proxy_params)
+            self._send_buffer = copy.deepcopy(self._send_history)
 
     def _send(self):
-        with self._send_lock:
-            if self._ws.connected and 0 < len(self._send_buffer):
-                message = self._send_buffer.pop(0)
-                self._ws.send(message)
-                time.sleep(0.05)
+        if self._ws.connected and 0 < len(self._send_buffer):
+            message = self._send_buffer.pop(0)
+            self._ws.send(message)
 
     def _recv(self):
         if self._ws.connected:
@@ -66,15 +62,11 @@ class Websocket:
 
     def _send_loop(self):
         while True:
-            try:
+            with self._send_lock:
                 self._connect()
                 self._send()
-            except Exception as e:
-                print("send", e)
+            time.sleep(1)
 
     def _recv_loop(self):
         while True:
-            try:
-                self._recv()
-            except Exception as e:
-                print("recv:", e)
+            self._recv()
