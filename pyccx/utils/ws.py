@@ -31,6 +31,7 @@ class Websocket:
         self._send_lock: Lock = Lock()
         self._send_thread: Thread = Thread(target=self._send_loop)
         self._recv_thread: Thread = Thread(target=self._recv_loop)
+        self._pong_thread: Thread = Thread(tra)
 
         self._send_thread.start()
         self._recv_thread.start()
@@ -65,7 +66,7 @@ class Websocket:
             with self._send_lock:
                 self._connect()
                 self._send()
-            time.sleep(1)
+            time.sleep(0.1)
 
     def _recv_loop(self):
         while True:
