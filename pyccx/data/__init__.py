@@ -2,14 +2,13 @@ import itertools
 from typing import Dict, List, Tuple
 
 import pandas as pd
-from rich.progress import Progress
-
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.data.local import LocalData
 from pyccx.defaults import BASE_TIME_FRAME
 from pyccx.interface.exchange import Exchange
 from pyccx.model.candle import Candle
 from pyccx.utils import resample_time_frame
+from rich.progress import Progress
 
 __EXCHANGE: Exchange = None
 __LOCAL_DATA: LocalData = None
@@ -24,7 +23,7 @@ def load_dataframe(exchange: str, symbol: str, time_frame: TimeFrame, update: bo
         __LOCAL_DATA = LocalData(exchange=__EXCHANGE)
 
     if update:
-        candles = __LOCAL_DATA.download_candles(symbol=symbol, time_frame=BASE_TIME_FRAME, update=update)
+        candles = __LOCAL_DATA.download_candles(symbol=symbol, time_frame=BASE_TIME_FRAME)
         sdf = Candle.to_dataframe(candles=candles)
     else:
         sdf = __LOCAL_DATA.load_dataframe(symbol=symbol, time_frame=BASE_TIME_FRAME)

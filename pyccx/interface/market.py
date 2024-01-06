@@ -3,13 +3,12 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import List, Any, Callable
 
-from tqdm import tqdm
-
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.interface.https import HttpsClient
 from pyccx.interface.wss import WssClient
 from pyccx.model.candle import Candle
 from pyccx.model.symbol_info import SymbolInfo
+from rich.progress import Progress
 
 
 class Market(ABC):
@@ -48,19 +47,19 @@ class Market(ABC):
         raise NotImplementedError()
 
     def get_candles(self, symbol: str, time_frame: TimeFrame, start_timestamp: int, stop_timestamp: int = None,
-                    show_tqdm: bool = False):
+                    progress: Progress = None):
         if stop_timestamp is None:
             stop_timestamp = datetime.now().timestamp() // time_frame * time_frame + time_frame
         candles_count = (stop_timestamp - start_timestamp) // time_frame
         requests_count = math.ceil(candles_count / self.max_candles)
 
-        bar = list(range(requests_count))
-        if show_tqdm:
-            bar = tqdm(bar)
-            bar.set_description_str(f"Downloading {symbol} {time_frame} Candles")
+        items = list(range(requests_count))
+        if progress is not None:
+            decs = f"Downloading {symbol} {time_frame} Candles"
+            task = progress.add_task(description=decs, total=len(items))
 
         candles: List[Candle] = []
-        for index in bar:
+        for index in items:
             # assign value to req_start as request start timestamp
             if 0 == len(candles):
                 req_start = start_timestamp + index * self.max_candles * time_frame
@@ -76,6 +75,10 @@ class Market(ABC):
                 req_candles = self.get_historical_candles(symbol=symbol, time_frame=time_frame,
                                                           start_timestamp=req_start, stop_timestamp=req_stop)
                 candles.extend(req_candles)
+
+            # update progress bar
+            if progress is not None:
+                progress.update(task, advance=1)
 
         return candles
 
