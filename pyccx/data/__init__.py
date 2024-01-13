@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.data.local import LocalData
-from pyccx.defaults import BASE_TIME_FRAME
+from pyccx.defaults import BASE_TIME_FRAME, PROXIES
 from pyccx.interface.exchange import Exchange
 from pyccx.model.candle import Candle
 from pyccx.utils import resample_time_frame
