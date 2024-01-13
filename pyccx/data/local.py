@@ -6,7 +6,7 @@ import pandas as pd
 from rich.progress import Progress
 
 from pyccx.constant.time_frame import TimeFrame
-from pyccx.defaults import DATA_DIR
+from pyccx.defaults import CANDLE_DIR
 from pyccx.interface.exchange import Exchange
 from pyccx.interface.market import Market
 from pyccx.model.candle import Candle
@@ -27,15 +27,11 @@ class LocalData:
         return self.exchange.future.market
 
     @property
-    def directory(self) -> str:
-        return os.path.join(DATA_DIR, "candle")
-
-    @property
     def candles_count(self) -> int:
         return self.__candles_count
 
     def _local_candles_path(self, symbol: str, time_frame: str) -> str:
-        exchange_symbol_directory = os.path.join(self.directory, self.exchange.exchange, symbol)
+        exchange_symbol_directory = os.path.join(CANDLE_DIR, self.exchange.exchange, symbol)
         create_directory(exchange_symbol_directory)
         file_path = os.path.join(exchange_symbol_directory, f"{time_frame}.csv")
 

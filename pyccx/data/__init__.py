@@ -7,7 +7,7 @@ from rich.progress import Progress
 
 from pyccx.constant.time_frame import TimeFrame
 from pyccx.data.local import LocalData
-from pyccx.defaults import BASE_TIME_FRAME, PROXIES, DATA_DIR
+from pyccx.defaults import BASE_TIME_FRAME, PROXIES, CANDLE_DIR
 from pyccx.interface.exchange import Exchange
 from pyccx.model.candle import Candle
 from pyccx.utils import resample_time_frame
@@ -47,7 +47,7 @@ def load_dataframes_dict(symbols: List[str], time_frames: List[TimeFrame], updat
 
 
 def get_local_symbols() -> List[str]:
-    root_dir = os.path.join(DATA_DIR, "candle", "binance")
+    root_dir = os.path.join(CANDLE_DIR, __EXCHANGE.exchange)
     symbols = os.listdir(root_dir)
     return symbols
 

@@ -1,17 +1,17 @@
 import argparse
 import sys
 
-from pyccx.data import load_dataframe
+from pyccx.data import *
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--time-frame', action='store', type=int, required=False, default=300)
     parser.add_argument('--symbol', action='store', type=str, required=False, default='BTC-USDT')
-    parser.add_argument('--exchange', action='store', type=str, required=False, default='binance')
+    parser.add_argument('--time-frame', action='store', type=int, required=False, default=300)
     args = parser.parse_args()
 
-    df = load_dataframe(exchange=args.exchange, symbol=args.symbol, time_frame=args.time_frame)
+    symbols = get_local_symbols()
+    df = load_dataframe(symbol=args.symbol, time_frame=args.time_frame)
 
 
 if __name__ == '__main__':

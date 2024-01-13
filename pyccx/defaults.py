@@ -6,6 +6,7 @@ from rich.progress import TextColumn, BarColumn, TaskProgressColumn, TimeRemaini
 # Directories
 HOME_DIR = os.path.expanduser('~')
 DATA_DIR = os.environ.get("DATA_DIR", os.path.join(HOME_DIR, "Data"))
+CANDLE_DIR = os.path.join(DATA_DIR, "candle")
 
 # proxies
 HTTP_PROXY = os.environ.get("PYCCX_HTTP_PROXY", None)
