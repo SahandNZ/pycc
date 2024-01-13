@@ -47,7 +47,7 @@ def load_dataframes_dict(symbols: List[str], time_frames: List[TimeFrame], updat
 
 
 def get_local_symbols() -> List[str]:
-    root_dir = os.path.join(DATA_DIR, "candle")
+    root_dir = os.path.join(DATA_DIR, "candle", "binance")
     symbols = os.listdir(root_dir)
     return symbols
 
